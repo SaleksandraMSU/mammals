@@ -1,0 +1,26 @@
+.singleSlider {
+    width: 100%;
+    height: 5px;
+    background-color: #cdd9ed;
+    border-radius: 3px;
+    z-index: 0;
+}
+
+.singleSlider .thumb {
+    width: 21px;
+    height: 21px;
+    cursor: grab;
+    background: #fff;
+    border-radius: 50%;
+    border: 4px solid #1451d2;
+    top: -12px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.singleSlider .track-0 {
+    border: 3px solid #1451d2;
+    border-radius: 3px;
+}

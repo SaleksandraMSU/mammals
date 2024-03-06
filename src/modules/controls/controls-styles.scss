@@ -1,0 +1,49 @@
+.ol-mouse-position {
+    bottom: 35px;
+    top: auto;
+    right: 10px;
+    position: absolute;
+    background: #fff;
+    padding: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    border: 1px solid lightgray;
+    font-size: 15px;
+}
+
+.ol-zoom {
+    height: 152px;
+}
+
+.ol-zoom .ol-zoom-out {
+    margin-top: 120px;
+}
+
+.ol-zoomslider {
+    background-color: transparent;
+    top: calc(0.5em + 2px + 1px + 1.14 * 1.375em);
+    height: 120px;
+}
+
+.ol-touch .ol-zoom .ol-zoom-out {
+    margin-top: 132px;
+}
+
+.ol-touch .ol-zoomslider {
+    top: 2.75em;
+}
+
+.ol-zoom-in.ol-has-tooltip:hover [role=tooltip],
+.ol-zoom-in.ol-has-tooltip:focus [role=tooltip] {
+    top: 3px;
+}
+
+.ol-zoom-out.ol-has-tooltip:hover [role=tooltip],
+.ol-zoom-out.ol-has-tooltip:focus [role=tooltip] {
+    top: 152px;
+}
+
+.ol-zoomslider button {
+    background-color: rgb(238, 235, 230);
+    border: 1px solid black;
+  }

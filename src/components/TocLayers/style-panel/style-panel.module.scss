@@ -1,0 +1,26 @@
+.panel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    justify-content: space-between;
+
+    .slider {
+        max-width: 100px;
+        height: 5px;
+        align-self: center;
+    }
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 0 1rem 1.5rem;
+    max-height: 200px;
+    background-color: rgba(211, 211, 211, 0.10);
+    padding: 20px 10px;
+    gap: 1.2rem;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+}

@@ -1,0 +1,36 @@
+.accordion {
+    width: 100%;
+
+    .contentBx {
+        position: relative;
+        background: #fff;
+        margin: 10px 20px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+
+        .label {
+            position: relative;
+            padding: 15px;
+            font-weight: 600;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .icon {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            opacity: 0.6;
+        }
+
+        .content {
+            position: relative;
+            background: #fff;
+            height: auto;
+            padding: 5px 15px 15px;
+            font-size: 17px;
+            border-radius: 6px;
+        }
+    }
+}

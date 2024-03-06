@@ -1,0 +1,22 @@
+.btn {
+    display: block;
+    margin-bottom: 0;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 13px;
+    letter-spacing: 0.73px;
+    background-image: linear-gradient(135deg, #e76c00 0%, #b83452 73%, #a61f71 100%);
+    color: #FFFFFF;
+
+    &:hover {
+        background-image: linear-gradient(165deg, #e76c00 0%, #b83452 73%, #a61f71 100%);
+        color: #FFFFFF;
+    }
+}
+
+;

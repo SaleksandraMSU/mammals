@@ -1,0 +1,68 @@
+.popup {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -50px;
+    min-width: 280px;
+    max-width: 500px;
+    max-height: 300px;
+    overflow-x: auto;
+    word-break: break-all;
+}
+
+.popup:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 35px;
+    margin-left: -11px;
+}
+
+.popup-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 5px;
+    right: 8px;
+}
+
+.popup-closer:after {
+    content: "✖";
+}
+
+.popup-closer:hover {
+    cursor: pointer;
+    background-color: rgba(141, 140, 140, 0.495);
+}
+
+.popup-content {
+    position: absolute;
+}
+
+.featureInfoDiv {
+    position: absolute;
+    display: block;
+    bottom: 10px;
+    margin-left: 8px;
+}
+
+.homebutton {
+    display: grid;
+    align-content: center;
+    height: 30px;
+}
+
+.homebutton:hover {
+    background-color: rgba(142, 234, 170, 0.495);
+    cursor: pointer;
+}
+
+.homebutton.clicked {
+    background-color: rgba(142, 234, 170);
+}
+
+.homebutton.clicked:hover {
+    background-color: rgba(142, 234, 170);
+}

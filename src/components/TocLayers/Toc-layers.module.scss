@@ -1,0 +1,29 @@
+.title {
+    margin-top: 1rem;
+    font-weight: 600;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0 1rem 1rem;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.icon {
+    opacity: 0.6;
+
+    &:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+    &:active {
+        opacity: 1;
+    }
+}
