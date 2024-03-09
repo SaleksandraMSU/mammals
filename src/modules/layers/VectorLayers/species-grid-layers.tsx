@@ -1,14 +1,9 @@
 import { useSelector } from "react-redux";
-import { EDisplayTypes, getDisplayMethod, getLayers } from "../../../redux";
+import { getLayers } from "../../../redux";
 import { SpeciesGrid } from "./species-grid";
 
 export const SpeciesGridLayers = () => {
     const speciesLayers = useSelector(getLayers);
-    const displayMethod = useSelector(getDisplayMethod);
-
-    if (displayMethod !== EDisplayTypes.GRID && displayMethod !== EDisplayTypes.MIX) {
-        return;
-    }
 
     return (
         <>

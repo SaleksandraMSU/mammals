@@ -17,7 +17,7 @@ import { getFiltersState, getHeatmapConfig } from '../../../redux';
 import { Heatmap as HeatmapLayer } from 'ol/layer.js';
 
 type TSpeciesGridProps = {
-    speciesVal: number;
+    speciesVal?: number;
     opacity: number;
 }
 
@@ -36,7 +36,7 @@ export const SpeciesHeatmap = ({ speciesVal, opacity }: TSpeciesGridProps) => {
 
     const filtered = features.filter((f) => {
         return (
-            f.get('species') === speciesVal &&
+            (speciesVal ? f.get('species') === speciesVal : true) &&
             (museum.length > 0 ? museum.includes(f.get('genesis_da')) : true) &&
             f.get('year') >= dateRange[0] && f.get('year') <= dateRange[1] &&
             (months.length > 0 ? months.includes(f.get('month')) : true) &&

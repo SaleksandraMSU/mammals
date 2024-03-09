@@ -14,9 +14,8 @@ import { Polygon } from 'ol/geom';
 import { useMapContext } from '../../map/map-context';
 import { useFeaturesContext } from '../layers-context';
 import { useSelector } from 'react-redux';
-import { EDisplayTypes, getDisplayMethod, getFiltersState, getGridConfig } from '../../../redux';
+import { EDisplayTypes, getDisplayMethod, getFiltersState, getGridConfig, getIsDisplayMethodChange, getZoomConfig } from '../../../redux';
 import { createGrid } from './grid-utils';
-import VectorLayer from "ol/layer/Vector";
 
 type TSpeciesGridProps = {
     speciesVal: number;
@@ -34,7 +33,9 @@ export const SpeciesGrid = React.memo(({ speciesVal, opacity }: TSpeciesGridProp
         isReliable
     } = useSelector(getFiltersState);
     const config = useSelector(getGridConfig);
+    const isDisplayChangeActive = useSelector(getIsDisplayMethodChange);
     const displayMethod = useSelector(getDisplayMethod);
+    const zoom = useSelector(getZoomConfig);
 
     const filtered = features.filter((f) => {
         return (
@@ -101,17 +102,21 @@ export const SpeciesGrid = React.memo(({ speciesVal, opacity }: TSpeciesGridProp
         new WebGLLayer({
             source: source,
             zIndex: 1,
+            visible: isDisplayChangeActive ?
+            (displayMethod === EDisplayTypes.GRID || displayMethod === EDisplayTypes.MIX)
+            : true,
         })
     ), [style, source, config])
 
 
     useEffect(() => {
         map.addLayer(layer);
+        !isDisplayChangeActive && layer.setMaxZoom(zoom.change);
 
         return () => {
             map.removeLayer(layer);
         }
-    }, [map, layer]);
+    }, [map, layer, isDisplayChangeActive]);
 
     return null;
 })

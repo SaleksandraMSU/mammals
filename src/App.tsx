@@ -3,7 +3,7 @@ import { Collapsible } from './components/Collapsible/Collapsible';
 import { Filters } from './components/Select/Filters';
 import { Checkbox } from './components/Checkbox/Checkbox';
 import { Toggle } from './components/Toggle/Toggle';
-import { BasemapsRadioGroup } from './modules/layers/Basemaps/basemaps-radiogroup';
+import { BasemapsSelect } from './modules/layers/Basemaps/basemaps-select';
 import PopupControl from './modules/popup/Popup';
 import { ResetButton } from './components/Button/Button';
 import { TocLayers } from './components/TocLayers/Toc-layers';
@@ -31,7 +31,7 @@ function App() {
               <ZoomChange />
               <ParametersPanel />
               <TocLayers />
-              <BasemapsRadioGroup />
+              <BasemapsSelect />
             </Collapsible>
             <Collapsible label='Фильтрация'>
               <Filters />

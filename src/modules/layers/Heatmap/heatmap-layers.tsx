@@ -1,10 +1,11 @@
 import { useSelector } from "react-redux";
-import { EDisplayTypes, getDisplayMethod, getLayers } from "../../../redux";
+import { EDisplayTypes, getDefaultLayer, getDisplayMethod, getLayers } from "../../../redux";
 import { SpeciesHeatmap } from "./species-heatmap";
 
-export const SpeciesHeatmapLayers = () => {
+export const HeatmapLayers = () => {
     const speciesLayers = useSelector(getLayers);
     const displayMethod = useSelector(getDisplayMethod);
+    const { opacity } = useSelector(getDefaultLayer);
 
     if (displayMethod !== EDisplayTypes.HEATMAP) {
         return;
@@ -20,7 +21,10 @@ export const SpeciesHeatmapLayers = () => {
                         opacity={l.opacity}
                     />
                 )
-                ) : null
+                ) :
+                <SpeciesHeatmap
+                    opacity={opacity}
+                />
             }
         </>
     )

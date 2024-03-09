@@ -10,7 +10,7 @@ export const createGrid = (
         case EGridTypes.SQUARE:
             return turf.squareGrid(bbox, size, { units: 'degrees' });
         case EGridTypes.HEX:
-            return turf.hexGrid(bbox, size, { units: 'degrees' });
+            return turf.hexGrid(bbox, size/2, { units: 'degrees' });
         case EGridTypes.TRIANGLE:
             return turf.triangleGrid(bbox, size, { units: 'degrees' });
     }
