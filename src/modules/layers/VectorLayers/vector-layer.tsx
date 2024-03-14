@@ -28,15 +28,15 @@ import {
     getZoomConfig,
 } from '../../../redux';
 import styles from "./vector-layer.module.scss";
-import { useFeaturesContext } from '../layers-context';
+import { useFeaturesContext } from '../features-context';
 import VectorTile from 'ol/layer/VectorTile.js';
 import VectorTileSource from 'ol/source/VectorTile.js';
 import WebGLVectorTileLayerRenderer from 'ol/renderer/webgl/VectorTileLayer.js';
-import { createXYZ } from "ol/tilegrid";
 
 
 export const VectorLayer = React.memo(() => {
     const { map } = useMapContext();
+    const { features } = useFeaturesContext();
     const defaultLayer = useSelector(getDefaultLayer);
     const isDisplayChangeActive = useSelector(getIsDisplayMethodChange);
     const displayMethod = useSelector(getDisplayMethod);
@@ -104,31 +104,32 @@ export const VectorLayer = React.memo(() => {
         }
     }
 
-    const source = new VectorTileSource({
-        format: new MVT(),
-        projection: map.getView().getProjection(),
-        url:
-            'http://localhost:8080/geoserver/gwc/service/tms/1.0.0/mammals:rmm@EPSG:900913@pbf/{z}/{x}/{-y}.pbf'
-    });
+    // const source = new VectorTileSource({
+    //     format: new MVT(),
+    //     projection: map.getView().getProjection(),
+    //     url:
+    //         'http://localhost:8080/geoserver/gwc/service/tms/1.0.0/mammals:rmm@EPSG:900913@pbf/{z}/{x}/{-y}.pbf'
+    // });
 
 
-    // const source = useMemo(() =>
-    //     new VectorSource<Feature<Point>>({
-    //         // url: 'src/rmm.geojson',
-    //         format: new GeoJSON(),
-    //         url: function () {
-    //             return (
-    //               'http://localhost:8080/geoserver/wfs?service=WFS&' +
-    //               'version=2.0.0&request=GetFeature&typename=mammals:rmm&' +
-    //               'outputFormat=application/json&srsname=EPSG:3857&' 
-    //             );
-    //           },
-    //     }), []);
+    const source = useMemo(() =>
+        new VectorSource<Feature<Point>>({
+            // url: 'src/rmm.geojson',
+            // format: new GeoJSON(),
+            // url: function () {
+            //     return (
+            //         'http://localhost:8080/geoserver/wfs?service=WFS&' +
+            //         'version=2.0.0&request=GetFeature&typename=mammals:rmm&' +
+            //         'outputFormat=application/json&srsname=EPSG:3857&'
+            //     );
+            features: features
+        }), [features]);
 
 
     const layer = useMemo(() =>
-        new WebGLVectorTileLayer({
+        new WebGLPointsLayer({
             source: source,
+            style: style,
             visible: displayMethod === EDisplayTypes.POINTS || displayMethod === EDisplayTypes.MIX,
         }
         ), [source, style, displayMethod]);
@@ -138,47 +139,54 @@ export const VectorLayer = React.memo(() => {
         map.addLayer(layer);
         !isDisplayChangeActive && layer.setMinZoom(zoom.change);
 
-            // layer.getSource()?.on("featuresloadstart", function () {
-            //     map.getTargetElement().classList.add(styles.spinner);
-            // });
-            // layer.getSource()?.on("featuresloadend", function () {
-            //     map.getTargetElement().classList.remove(styles.spinner);
-            //     setFeatures(layer.getSource()?.getFeatures()!)
-            //     console.log(layer.getSource()?.getFeatures()!)
-            // });
-
-            return () => {
-                map.removeLayer(layer);
-            }
-        }, [map, layer, isDisplayChangeActive]);
-
-        return null;
-
-
-        // const layerWMS = new TileLayer({
-        //     source: new TileWMS({
-        //         url: "https://zmmu.msu.ru/geoserver/MammalsRussia/wms",
-        //         params: {'LAYERS': "MammalsRussia:data_basic", 'TILED': true },
-        //         serverType: 'geoserver'
-        //     }),
+        // layer.getSource()?.on("featuresloadstart", function () {
+        //     map.getTargetElement().classList.add(styles.spinner);
+        // });
+        // layer.getSource()?.on("featuresloadend", function () {
+        //     map.getTargetElement().classList.remove(styles.spinner);
         // });
 
-        // const layer = new VectorLayer({
-        //     source: new VectorSource({
-        //         url: './src/mammals.geojson',
-        //         format: new GeoJSON(),
-        //     }),
-        //     style: new Style({
-        //         image: new CircleStyle({
-        //           radius: 5,
-        //           stroke: new Stroke({
-        //             color: 'blue',
-        //           }),
-        //           fill: new Fill({
-        //             color: 'red',
-        //           }),
-        //         }),
-        //     }),
-        //     declutter: true,
-        // })
-    })
+        return () => {
+            map.removeLayer(layer);
+        }
+    }, [map, layer, isDisplayChangeActive]);
+
+    // useEffect(() => {
+    //     !features.length ?
+    //         map.getTargetElement().classList.add(styles.spinner)
+    //         :
+    //         map.getTargetElement().classList.remove(styles.spinner);
+    // }, [map, features.length])
+
+    //  const layerWMS = new TileLayer({
+    //     source: new TileWMS({
+    //         url: "https://zmmu.msu.ru/geoserver/MammalsRussia/wms",
+    //         params: {'LAYERS': "MammalsRussia:data_basic", 'TILED': true },
+    //         serverType: 'geoserver'
+    //     }),
+    // });
+
+    return null;
+
+
+
+
+    // const layer = new VectorLayer({
+    //     source: new VectorSource({
+    //         url: './src/mammals.geojson',
+    //         format: new GeoJSON(),
+    //     }),
+    //     style: new Style({
+    //         image: new CircleStyle({
+    //           radius: 5,
+    //           stroke: new Stroke({
+    //             color: 'blue',
+    //           }),
+    //           fill: new Fill({
+    //             color: 'red',
+    //           }),
+    //         }),
+    //     }),
+    //     declutter: true,
+    // })
+})

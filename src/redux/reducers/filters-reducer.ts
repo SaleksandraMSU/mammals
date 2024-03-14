@@ -2,7 +2,7 @@ import { createReducer } from "@reduxjs/toolkit";
 import { IFiltersState } from "../types";
 import { resetFilters, setFilters } from "../actions";
 
-const initialState: IFiltersState = {
+export const initialState: IFiltersState = {
     species: [],
     dateRange: [1697, 2024],
     months: [],

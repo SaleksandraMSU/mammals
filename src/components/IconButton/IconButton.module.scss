@@ -1,0 +1,18 @@
+.button {
+    width: fit-content;
+    background: transparent;
+    opacity: 0.8;
+    border: none;
+    border-radius: 6px;
+    padding: 4.5px 6px 2px;
+
+    &:hover {
+        cursor: pointer;
+        opacity: 1;
+    }
+}
+
+.active {
+    opacity: 1;
+    background: #DEEBFF;
+}

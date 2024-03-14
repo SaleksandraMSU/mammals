@@ -5,7 +5,7 @@ import { Point } from 'ol/geom';
 import { useMapContext } from "../../map/map-context"
 import { useSelector } from 'react-redux';
 import { EDisplayTypes, getDefaultLayer, getDisplayMethod, getFiltersState, getHeatmapConfig, getLayers } from '../../../redux';
-import { useFeaturesContext } from '../layers-context';
+import { useFeaturesContext } from '../features-context';
 import {Cluster} from 'ol/source.js';
 import { Feature } from 'ol';
 

@@ -17,6 +17,7 @@ export const TocLayers = () => {
                     title={defaultLayer.title}
                     opacity={defaultLayer.opacity} 
                     color={defaultLayer.color}
+                    gradient={defaultLayer.gradient}
                     />
                 :
                 layers.map((lyr) =>
@@ -25,6 +26,7 @@ export const TocLayers = () => {
                         title={lyr.title}
                         opacity={lyr.opacity}
                         color={lyr.color}
+                        gradient={lyr.gradient}
                     />
                 )
 

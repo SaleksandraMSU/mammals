@@ -13,10 +13,11 @@ import { projection } from '../../map/map';
 type TBaseLayerProps = {
     title: EBasemaps,
     url: string,
+    attributions?: string,
     proj: string | undefined,
 }
 
-export const BaseLayer = ({ title, url, proj }: TBaseLayerProps) => {
+export const BaseLayer = ({ title, url, proj, attributions }: TBaseLayerProps) => {
     const { map } = useMapContext();
     const activeBasemap = useSelector(getActiveBasemap);
 
@@ -25,6 +26,8 @@ export const BaseLayer = ({ title, url, proj }: TBaseLayerProps) => {
         zIndex: -1,
         source: url ? new XYZ({
             url: url,
+            attributions: attributions,
+            attributionsCollapsible: false,
             // tileGrid: createXYZ({
             //     extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34]
             // })
@@ -33,10 +36,14 @@ export const BaseLayer = ({ title, url, proj }: TBaseLayerProps) => {
             apiKey: "d83c9a90-9ab6-4a1e-a275-6737e10a2bc6",
             retina: true,
         })
-    }), [map, activeBasemap])
+    }), [map, activeBasemap, attributions])
 
     useEffect(() => {
         map.addLayer(layer);
+
+        return () => {
+            map.removeLayer(layer)
+        }
     }, [map, layer])
 
     return null;

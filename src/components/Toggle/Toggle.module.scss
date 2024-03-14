@@ -45,9 +45,9 @@
     width: 60px;
 }
 
-.radioGroup {
+.methods {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.5rem;
-    margin: 1rem;
+    margin: 0.5rem 0 0.5rem 1rem;
 }

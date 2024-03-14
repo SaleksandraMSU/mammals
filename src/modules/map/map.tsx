@@ -42,8 +42,8 @@ const MapComponent = (props: TMapComponentProps) => {
             controls: defaultControls().extend([scaleControl, mousePositionControl, fullScreen, zoomSlider]),
             layers: [],
             view: new View({
-                center: fromLonLat([105, 68]),
-                zoom: 2.5,
+                center: fromLonLat([105, 70]),
+                zoom: 2.7,
             }),
         });
         setMapContext({ map });

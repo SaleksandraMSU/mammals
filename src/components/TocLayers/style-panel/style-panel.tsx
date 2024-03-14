@@ -1,17 +1,23 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./style-panel.module.scss";
-import { updateDefaultLayer, updateSpeciesLayer } from "../../../redux";
+import { EDisplayTypes, IGradientConfig, getIsDisplayMethodChange, updateDefaultLayer, updateSpeciesLayer } from "../../../redux";
 import { SingleSlider } from "../../Slider/SingleSlider";
+import { GradientPicker } from "../../GradientPicker/GradientPicker";
 
 type TStylePanelProps = {
     title: string,
     opacity: number,
     color?: string,
+    gradient: IGradientConfig,
+    displayMethod: string,
 }
 
-export const StylePanel = ({ title, opacity, color }: TStylePanelProps) => {
+export const StylePanel = ({ title, opacity, color, gradient, displayMethod }: TStylePanelProps) => {
 
     const dispatch = useDispatch();
+    const isDisplayChangeActive = useSelector(getIsDisplayMethodChange)
+    const allowPointsColor = [EDisplayTypes.POINTS, EDisplayTypes.MIX].includes(displayMethod as EDisplayTypes);
+    
 
     const onChange = (v: number) => {
         if (title === 'Все данные') {
@@ -41,10 +47,12 @@ export const StylePanel = ({ title, opacity, color }: TStylePanelProps) => {
                     onChange={onChange}
                 />
             </div>
-            <div className={styles.panel}>
-                <label>Цвет заливки</label>
-                <input type="color" value={color} onChange={(e) => onColorChange(e.target.value)} />
-            </div>
+            {(!isDisplayChangeActive || displayMethod !== EDisplayTypes.POINTS )&& <GradientPicker title={title} gradient={gradient} />}
+            {allowPointsColor &&
+                <div className={styles.panel}>
+                    <label>Цвет точек</label>
+                    <input type="color" value={color} onChange={(e) => onColorChange(e.target.value)} />
+                </div>}
         </div>
     )
 }

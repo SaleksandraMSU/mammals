@@ -14,7 +14,7 @@ export const PointsParameters = () => {
     return (
         <div className={styles.paramsWrapper}>
             <div className={styles.wrapper}>
-                <span style={{ opacity: config.auto ? 0.6 : 1 }}>Радиус точек</span>
+                <span style={{ opacity: config.auto ? 0.5 : 1 }}>Радиус точек</span>
                 <input
                     checked={!config.auto}
                     onChange={() => dispatch(updatePointConfig({ auto: !config.auto }))}

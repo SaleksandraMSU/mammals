@@ -5,7 +5,7 @@ import { SpeciesHeatmap } from "./species-heatmap";
 export const HeatmapLayers = () => {
     const speciesLayers = useSelector(getLayers);
     const displayMethod = useSelector(getDisplayMethod);
-    const { opacity } = useSelector(getDefaultLayer);
+    const { opacity, gradient } = useSelector(getDefaultLayer);
 
     if (displayMethod !== EDisplayTypes.HEATMAP) {
         return;
@@ -17,13 +17,15 @@ export const HeatmapLayers = () => {
                 speciesLayers.map((l) => (
                     <SpeciesHeatmap
                         key={l.value}
-                        speciesVal={l.value!}
+                        speciesVal={l.value}
                         opacity={l.opacity}
+                        gradient={l.gradient}
                     />
                 )
                 ) :
                 <SpeciesHeatmap
                     opacity={opacity}
+                    gradient={gradient}
                 />
             }
         </>

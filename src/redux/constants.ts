@@ -13,10 +13,13 @@ export enum EGridTypes {
     TRIANGLE = "triangle",
 };
 
+export const DEFAULT_GRADIENT = { color1: "#f5f500", color2: "#f57a00", color3: "#f50000"}
+
 export const DEFAULT_LAYER: ILayerConfrig = {
     title: "Все данные",
     opacity: 1,
     color: "#FF8000",
+    gradient: DEFAULT_GRADIENT,
 };
 
 export const DEFAULT_GRID: IGridConfig = {

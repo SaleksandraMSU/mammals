@@ -13,11 +13,18 @@ export interface IFiltersState {
     isPhoto: boolean,
 };
 
+export interface IGradientConfig {
+    color1: string,
+    color2: string,
+    color3: string,
+};
+
 export interface ILayerConfrig {
     title: string,
     value?: number,
     opacity: number,
     color: string,
+    gradient: IGradientConfig,
 };
 
 export interface IGridConfig {
@@ -56,5 +63,5 @@ export interface ILayersState {
 export type TLayerUpdatePayload = {
     title: string,
     prop: string,
-    value: number | string,
+    value: number | string | IGradientConfig,
 }

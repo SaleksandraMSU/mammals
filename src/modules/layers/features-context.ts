@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useContext } from "react";
+import React, { useContext } from "react";
 import { Feature } from "ol";
 import { Point } from "ol/geom";
 
@@ -14,7 +14,7 @@ export const useFeaturesContext = (): IFeaturesContext => {
   const featuresContext = useContext(FeaturesContext);
   if (!featuresContext) {
     throw new Error(
-      `Map context is not initialized`
+      `Feature context is not initialized`
     );
   }
   return featuresContext;

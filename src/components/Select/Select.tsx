@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Select, { OptionsOrGroups, GroupBase, MultiValue } from 'react-select';
 import { IFiltersState } from '../../redux/types';
 import { setFilters, setLayers } from '../../redux/actions';
-import { getFiltersState } from '../../redux';
+import { DEFAULT_GRADIENT, getFiltersState } from '../../redux';
 import { useState } from 'react';
 import { getRandomColor } from './select-utils';
 
@@ -32,6 +32,7 @@ export const FilterSelect = ({ options, title, value }: TSelectProps) => {
                     value: +option.value,
                     opacity: 1,
                     color: getRandomColor(),
+                    gradient: DEFAULT_GRADIENT,
                 }
             ))))
         }

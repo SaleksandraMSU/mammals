@@ -1,9 +1,13 @@
 import { useSelector } from "react-redux";
-import { getLayers } from "../../../redux";
+import { getDefaultLayer, getIsZeroFilters, getLayers } from "../../../redux";
 import { SpeciesGrid } from "./species-grid";
+import { GridLayer } from "./grid-layer";
 
 export const SpeciesGridLayers = () => {
     const speciesLayers = useSelector(getLayers);
+    const isNoFilters = useSelector(getIsZeroFilters);
+    console.log(isNoFilters)
+    const { opacity, gradient } = useSelector(getDefaultLayer);
 
     return (
         <>
@@ -11,11 +15,20 @@ export const SpeciesGridLayers = () => {
                 speciesLayers.map((l) => (
                     <SpeciesGrid
                         key={l.value}
-                        speciesVal={l.value!}
+                        speciesVal={l.value}
                         opacity={l.opacity}
+                        gradient={l.gradient}
                     />
                 )
-                ) : null
+                ) :
+                isNoFilters ?
+                    <GridLayer />
+                    :
+                    <SpeciesGrid
+                        key={"all_data"}
+                        opacity={opacity}
+                        gradient={gradient}
+                    />
             }
         </>
     )

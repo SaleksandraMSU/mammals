@@ -4,16 +4,20 @@ import { TbZoomInAreaFilled } from "react-icons/tb";
 import cn from "classnames";
 import { StylePanel } from "./style-panel";
 import styles from "./Toc-layers.module.scss";
+import { IGradientConfig, getDisplayMethod } from "../../redux";
+import { useSelector } from "react-redux";
 
 type TTocItemProps = {
     title: string,
     opacity: number,
     color?: string,
+    gradient: IGradientConfig,
 };
 
-export const TocItem = ({ title, opacity, color }: TTocItemProps) => {
+export const TocItem = ({ title, opacity, color, gradient }: TTocItemProps) => {
 
     const [styleActive, setStyleActive] = useState(false);
+    const displayMethod = useSelector(getDisplayMethod);
 
     return (
         <>
@@ -30,7 +34,15 @@ export const TocItem = ({ title, opacity, color }: TTocItemProps) => {
                     <TbZoomInAreaFilled size={20} className={styles.icon} />
                 </div>
             </div>
-            {styleActive && <StylePanel opacity={opacity} title={title} color={color} />}
+            {styleActive &&
+                <StylePanel
+                    opacity={opacity}
+                    title={title}
+                    color={color}
+                    gradient={gradient}
+                    displayMethod={displayMethod}
+                />
+            }
         </>
     )
 };

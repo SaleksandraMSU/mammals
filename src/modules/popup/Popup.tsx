@@ -13,7 +13,7 @@ const PopupControl = () => {
   useEffect(() => {
     const overlay = new Overlay({
       element: popupRef.current!,
-      autoPan: false,
+      autoPan: true,
     });
     map.addOverlay(overlay);
 
@@ -24,7 +24,7 @@ const PopupControl = () => {
         const popupContent = (
           <div>
             <button className="popup-closer" onClick={() => overlay.setPosition(undefined)}></button>
-            {Object.keys(attributes).slice(1).map((key) => (
+            {Object.keys(attributes).filter((key) => key !== "geometry").map((key) => (
               <p key={key}>
                 <strong>{key}: </strong>
                 {JSON.stringify(attributes[key])}

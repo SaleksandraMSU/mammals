@@ -25,7 +25,7 @@ function App() {
         <div style={{ fontSize: "36px", padding: "30px 0" }}>Карта млекопитающих</div>
         <div className={styles.gridContainer}>
           <div className={styles.sidebar}>
-            <div style={{ fontSize: "18px", fontWeight: "600", margin: "20px 0 30px 40px" }}>Настройки карты</div>
+            <div style={{ fontSize: "18px", fontWeight: "600", margin: "20px 0 20px 40px" }}>Настройки карты</div>
             <Collapsible label='Визуализация' defaultActive>
               <Toggle />
               <ZoomChange />

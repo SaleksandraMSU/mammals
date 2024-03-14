@@ -2977,10 +2977,10 @@ object-keys@^1.1.1:
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.1.1.tgz#1c47f272df277f3b1daf061677d9c82e2322c60e"
   integrity sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA==
 
-ol@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/ol/-/ol-9.0.0.tgz#449207b0da5c31f905a030fac141e04935a126a0"
-  integrity sha512-+nYHZYbHrRUTDJ8ryxXPdDoAiaT6Zea02cocmGqsJXs4Oac1fYC9EbTIU2Y7803QcmG3u2MR88RxbksBvK+ZfQ==
+ol@^9.0.1-dev.1710242622736:
+  version "9.0.1-dev.1710242622736"
+  resolved "https://registry.yarnpkg.com/ol/-/ol-9.0.1-dev.1710242622736.tgz#b465fb0303902de97569720321fd6cb3d069c84a"
+  integrity sha512-Wy3OrOrDZL3WbfvYCjERmDYQi4VB0hFd6oWNtPftBa+snjac5pllLLylDxaE6EaCMJVNKabz6iGZFsu2NFkoiw==
   dependencies:
     color-rgba "^3.0.0"
     color-space "^2.0.1"

@@ -7,21 +7,22 @@ import * as turf from '@turf/turf';
 import pointsWithinPolygon from '@turf/points-within-polygon';
 //@ts-ignore
 import { toWgs84 } from "@turf/projection"
-import { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Feature } from 'ol';
 import { Point } from 'ol/geom';
 import { useMapContext } from '../../map/map-context';
-import { useFeaturesContext } from '../layers-context';
+import { useFeaturesContext } from '../features-context';
 import { useSelector } from 'react-redux';
-import { getFiltersState, getHeatmapConfig } from '../../../redux';
+import { IGradientConfig, getFiltersState, getHeatmapConfig } from '../../../redux';
 import { Heatmap as HeatmapLayer } from 'ol/layer.js';
 
 type TSpeciesGridProps = {
     speciesVal?: number;
     opacity: number;
+    gradient: IGradientConfig;
 }
 
-export const SpeciesHeatmap = ({ speciesVal, opacity }: TSpeciesGridProps) => {
+export const SpeciesHeatmap = React.memo(({ speciesVal, opacity, gradient }: TSpeciesGridProps) => {
     const { map } = useMapContext();
     const { features } = useFeaturesContext();
     const {
@@ -31,7 +32,7 @@ export const SpeciesHeatmap = ({ speciesVal, opacity }: TSpeciesGridProps) => {
         determinationMethod,
         isReliable
     } = useSelector(getFiltersState);
-
+    const { color1, color2, color3 } = gradient;
     const config = useSelector(getHeatmapConfig);
 
     const filtered = features.filter((f) => {
@@ -56,8 +57,9 @@ export const SpeciesHeatmap = ({ speciesVal, opacity }: TSpeciesGridProps) => {
             blur: config.blur,
             radius: config.radius,
             opacity: opacity,
+            gradient: [color1, color2, color3],
         })
-    ), [source, config, opacity]);
+    ), [source, config, opacity, gradient]);
 
 
     useEffect(() => {
@@ -69,4 +71,4 @@ export const SpeciesHeatmap = ({ speciesVal, opacity }: TSpeciesGridProps) => {
     }, [map, layer]);
 
     return null;
-}
+});

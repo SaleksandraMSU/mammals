@@ -1,21 +1,26 @@
 import { displayMethods } from "./visualization-constants";
 import { useDispatch, useSelector } from "react-redux";
-import { 
-    toggleDisplayChange, 
-    getDisplayMethod, 
-    getIsDisplayMethodChange, 
-    setDisplayMethod 
+import {
+    toggleDisplayChange,
+    getDisplayMethod,
+    getIsDisplayMethodChange,
+    setDisplayMethod
 } from "../../redux";
 import styles from "./Toggle.module.scss";
+import { PointsIcon } from "../Icons/PointsIcon";
+import { GridIcon } from "../Icons/GridIcon";
+import { MixIcon } from "../Icons/MixIcon";
+import { HeatmapIcon } from "../Icons/HeatmapIcon";
+import { IconButton } from "../IconButton/IconButton";
 
 export const Toggle = () => {
     const dispatch = useDispatch();
 
     const displayMethod = useSelector(getDisplayMethod);
     const toggled = useSelector(getIsDisplayMethodChange);
-    const onMethodChange = (e: any) => {
-        dispatch(setDisplayMethod(e.target.value));
-      };
+    const onMethodChange = (value: any) => {
+        dispatch(setDisplayMethod(value));
+    };
 
     return (
         <>
@@ -37,18 +42,29 @@ export const Toggle = () => {
                 </label>
             </div>
             {toggled &&
-                <div className={styles.radioGroup} onChange={onMethodChange}>
+                <div className={styles.methods}>
                     {
-                        displayMethods.map((method) => (
-                            <label key={method.key}>
-                                <input
-                                    type="radio"
+                        displayMethods.map((method) => {
+                            const Icon = method.icon;
+                            return (
+                                <IconButton
+                                    key={method.key}
                                     value={method.value}
-                                    checked={method.value === displayMethod}
-                                    readOnly />
-                                {method.key}
-                            </label>
-                        ))
+                                    onClick={onMethodChange}
+                                    active={method.value === displayMethod}
+                                >
+                                    <Icon />
+                                </IconButton>
+                            )
+                            // <label key={method.key}>
+                            //     <input
+                            //         type="radio"
+                            //         value={method.value}
+                            //         checked={method.value === displayMethod}
+                            //         readOnly />
+                            //     {method.key}
+                            // </label>
+                        })
                     }
                 </div>
             }
