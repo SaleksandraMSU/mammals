@@ -9,7 +9,7 @@ import WebGLVectorLayerRenderer from 'ol/renderer/webgl/VectorLayer.js';
 import { useMapContext } from '../../map/map-context';
 import { EDisplayTypes, getDefaultLayer, getDisplayMethod, getLayers } from '../../../redux';
 import { getInterimColor, hexToRgb } from "../layers-utils";
-import { getGeoserverFeatures } from "../features-service";
+import { getGeoserverFeatures } from "../../../service/features-service";
 
 export const GridLayer = React.memo(() => {
     const { map } = useMapContext();

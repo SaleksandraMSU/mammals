@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import Select, { OptionProps } from 'react-select';
+import Select, { components, ControlProps, OptionProps } from 'react-select';
 import cn from "classnames";
 import { getActiveBasemap, setActiveBasemap } from "../../../redux";
 import { basemapsItems, type IBasemapItem } from "./basemaps-constants";
@@ -13,8 +13,8 @@ export const BasemapsSelect = () => {
         dispatch(setActiveBasemap(selected.value));
     };
 
-    const CustomOption: React.ComponentType<OptionProps<IBasemapItem>> = (
-        { innerRef, data, isSelected, innerProps }
+    const CustomOption = (
+        { innerRef, data, isSelected, innerProps } : OptionProps<IBasemapItem>
     ) => (
         <div
             ref={innerRef}
@@ -29,6 +29,20 @@ export const BasemapsSelect = () => {
         </div>
     );
 
+    const CustomControl = (
+        { children, ...props }: ControlProps<IBasemapItem>
+    ) => {
+        const { value } = props.selectProps;
+        const style = {margin: "3px"};
+
+        return (
+            <components.Control {...props}>
+                <img src={value!.icon} height={30} width={40} style={style}/>
+                {children}
+            </components.Control>
+        );
+    };
+
     return (
         <>
             <div className={styles.title}>Базовая карта</div>
@@ -36,7 +50,7 @@ export const BasemapsSelect = () => {
                 options={basemapsItems}
                 value={basemapsItems.find(option => option.value === activeBasemap)}
                 onChange={(selected) => onBasemapChange(selected)}
-                components={{ Option: CustomOption }}
+                components={{ Option: CustomOption, Control: CustomControl }}
                 styles={{
                     control: (baseStyles) => ({
                         ...baseStyles,

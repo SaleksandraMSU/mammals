@@ -6,22 +6,25 @@ import { register } from 'ol/proj/proj4.js';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { IMapContext, MapContext } from './map-context';
 import { fullScreen, mousePositionControl, scaleControl, zoomSlider } from '../controls';
+import { useDispatch } from 'react-redux';
+import { setZoomParams } from '../../redux';
+import { PROJECTION } from './projection';
 
 type TMapComponentProps = PropsWithChildren<{
     className?: string;
 }>;
 
-proj4.defs("EPSG:3576","+proj=laea +lat_0=90 +lon_0=90 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs");
-register(proj4);
-// export const projection = getProjection("EPSG:3576");
-export const projection = new Projection({
-    code: "EPSG:3576",
-    extent: [
-      -18019909.21177587, -9009954.605703328, 18019909.21177587,
-      9009954.605703328,
-    ],
-    worldExtent: [-179, -89.99, 179, 89.99],
-  });
+// proj4.defs("ESRI:102027","+proj=lcc +lat_0=30 +lon_0=95 +lat_1=15 +lat_2=65 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs");
+// register(proj4);
+// export const projection = getProjection("ESRI:102027");
+// export const projection = new Projection({
+//     code: "EPSG:3576",
+//     extent: [
+//         -18019909.21177587, -9009954.605703328, 18019909.21177587,
+//         9009954.605703328,
+//     ],
+//     worldExtent: [-179, -89.99, 179, 89.99],
+// });
 
 
 
@@ -42,8 +45,9 @@ const MapComponent = (props: TMapComponentProps) => {
             controls: defaultControls().extend([scaleControl, mousePositionControl, fullScreen, zoomSlider]),
             layers: [],
             view: new View({
-                center: fromLonLat([105, 70]),
+                center: [0, 0],
                 zoom: 2.7,
+                projection: PROJECTION,
             }),
         });
         setMapContext({ map });

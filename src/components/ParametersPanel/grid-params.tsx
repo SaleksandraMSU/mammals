@@ -40,9 +40,9 @@ export const GridParameters = () => {
         <div className={styles.wrapper}>
             <label>Размер ячейки</label>
             <SingleSlider
-                min={0.25}
-                max={5}
-                step={0.25}
+                min={25}
+                max={500}
+                step={25}
                 value={config.cellSize}
                 onChange={onSizeChange}
             />

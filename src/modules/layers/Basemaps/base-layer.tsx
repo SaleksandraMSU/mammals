@@ -1,4 +1,4 @@
-import TileLayer from 'ol/layer/WebGLTile.js';
+import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ.js';
 import StadiaMaps from 'ol/source/StadiaMaps.js';
 import OSM from 'ol/source/OSM.js';
@@ -8,7 +8,6 @@ import { EBasemaps } from '.';
 import { useMapContext } from '../../map/map-context';
 import { useSelector } from 'react-redux';
 import { getActiveBasemap } from '../../../redux';
-import { projection } from '../../map/map';
 
 type TBaseLayerProps = {
     title: EBasemaps,
@@ -28,6 +27,7 @@ export const BaseLayer = ({ title, url, proj, attributions }: TBaseLayerProps) =
             url: url,
             attributions: attributions,
             attributionsCollapsible: false,
+            projection: proj ?? "EPSG:3857"
             // tileGrid: createXYZ({
             //     extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34]
             // })

@@ -80,3 +80,8 @@ export const getZoomConfig = createSelector(
     getLayersState,
     (state) => state.zoom
 );
+
+export const getGridCompareLayers = createSelector(
+    getLayersState,
+    (state) => state.gridsCompare
+);

@@ -36,3 +36,18 @@
         }
     }
 }
+
+.container {
+    margin: 5px;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    .boxGradient {
+        width: auto;
+        height: 20px;
+        border: 1.5px solid gray;
+        margin: 8px;
+    }
+}

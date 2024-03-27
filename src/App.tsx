@@ -11,6 +11,9 @@ import { LayersCollection } from './modules/layers';
 import styles from "./App.module.scss";
 import { ParametersPanel } from './components/ParametersPanel/ParamsPanel';
 import { ZoomChange } from './components/ZoomChange/ZoomChange';
+import { StatisticsPanel } from './components/StatisticsPanel/Statistics-panel';
+import { Legend } from './modules/legend/Legend';
+import { SpeciesComparePanel } from './components/SpeciesCompare/SpeciesComparePanel';
 
 function App() {
   return (
@@ -38,11 +41,16 @@ function App() {
               <Checkbox />
               <ResetButton />
             </Collapsible>
+            <Collapsible label='Статистика'>
+              <StatisticsPanel />
+              <SpeciesComparePanel />
+            </Collapsible>
           </div>
           <div className={styles.map}>
             <MapComponent>
               <LayersCollection />
               <PopupControl />
+              <Legend />
             </MapComponent>
           </div>
         </div>

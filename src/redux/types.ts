@@ -1,4 +1,10 @@
-import { EGridTypes } from "."
+import type {
+    Feature,
+    Polygon,
+    FeatureCollection,
+    GeoJsonProperties,
+} from "geojson";
+import { EGridTypes, EGridsRenderMethods } from "./constants"
 import { EBasemaps } from "../modules/layers"
 
 export interface IFiltersState {
@@ -25,11 +31,13 @@ export interface ILayerConfrig {
     opacity: number,
     color: string,
     gradient: IGradientConfig,
+    cellsStats: Feature<Polygon, GeoJsonProperties>[],
 };
 
 export interface IGridConfig {
     type: EGridTypes,
     cellSize: number,
+    method: EGridsRenderMethods,
 }
 
 export interface IHeatmapConfig {
@@ -44,8 +52,15 @@ export interface IPointConfig {
 }
 
 export interface IZoomConfig {
-    current: number,
     change: number,
+    toLayer: number | null,
+}
+
+export interface IGridsCompare {
+    layer1: number | null,
+    layer2: number | null,
+    percentage?: number,
+    area?: number,
 }
 
 export interface ILayersState {
@@ -58,10 +73,11 @@ export interface ILayersState {
     points: IPointConfig,
     grid: IGridConfig,
     heatmap: IHeatmapConfig,
+    gridsCompare: IGridsCompare,
 }
 
 export type TLayerUpdatePayload = {
     title: string,
     prop: string,
-    value: number | string | IGradientConfig,
+    value: any,
 }

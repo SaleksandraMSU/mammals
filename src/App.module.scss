@@ -27,7 +27,7 @@ body {
 }
 
 .footer {
-  margin-top: 20px;
+  margin-top: 75px;
   border-top: 1px solid #E76C00;
   text-align: center;
   padding: 10px 0;
@@ -37,6 +37,7 @@ body {
 .gridContainer {
   display: grid;
   grid-template-columns: 25% 75%;
+  height: 575px;
 }
 
 .sidebar {
@@ -46,7 +47,6 @@ body {
   line-height: 1.2;
   border-right: 2px solid rgb(201, 201, 201);
   overflow-y: auto;
-  max-height: 632px;
 }
 .map {
   position: relative;

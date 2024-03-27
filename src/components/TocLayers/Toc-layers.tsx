@@ -1,19 +1,26 @@
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./Toc-layers.module.scss";
-import { getDefaultLayer, getLayers } from "../../redux";
+import { EDisplayTypes, getDefaultLayer, getDisplayMethod, getLayers } from "../../redux";
 import { TocItem } from "./toc-item";
+import { RadioButtons } from "../RadioButtons/RadioButtons";
 
 export const TocLayers = () => {
 
     const layers = useSelector(getLayers);
     const defaultLayer = useSelector(getDefaultLayer);
+    const displayMethod = useSelector(getDisplayMethod);
+
+    const isButonsNotRender = [EDisplayTypes.POINTS, EDisplayTypes.HEATMAP].includes(displayMethod as EDisplayTypes) ||
+        layers.length < 2
 
     return (
         <div>
             <div className={styles.title}>Векторные слои</div>
+            {!isButonsNotRender && <RadioButtons />}
             {!layers.length ?
                 <TocItem
                     key={defaultLayer.title}
+                    value={9999}
                     title={defaultLayer.title}
                     opacity={defaultLayer.opacity} 
                     color={defaultLayer.color}
@@ -22,7 +29,8 @@ export const TocLayers = () => {
                 :
                 layers.map((lyr) =>
                     <TocItem
-                        key={lyr.title}
+                        key={lyr.value}
+                        value={lyr.value}
                         title={lyr.title}
                         opacity={lyr.opacity}
                         color={lyr.color}

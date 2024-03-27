@@ -18,6 +18,7 @@ import {
     updateHeatmapConfig,
     updatePointConfig,
     setZoomParams,
+    setCompareGridLayers,
 } from "../actions";
 import { EBasemaps } from "../../modules/layers";
 
@@ -26,11 +27,12 @@ const initialState: ILayersState = {
     showMethod: EDisplayTypes.POINTS,
     basemap: EBasemaps.YANDEX,
     layers: [],
-    zoom: { current: 2.5, change: 11 },
+    zoom: { change: 11, toLayer: null },
     defaultLayer: DEFAULT_LAYER,
     grid: DEFAULT_GRID,
     heatmap: DEFAULT_HEATMAP,
     points: DEFAULT_POINTS,
+    gridsCompare: { layer1: null, layer2: null },
 }
 
 export const LayersReducer = createReducer(initialState, (builder) => {
@@ -101,6 +103,11 @@ export const LayersReducer = createReducer(initialState, (builder) => {
                 ...action.payload
             }
         }))
-
-
+        .addCase(setCompareGridLayers, (state, action) => ({
+            ...state,
+            gridsCompare: {
+                ...state.gridsCompare,
+                ...action.payload
+            }
+        }))
 })

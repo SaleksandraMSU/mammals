@@ -1,0 +1,12 @@
+.box {
+    height: 140px;
+    width: 25px;
+    border: 1.5px solid gray;
+}
+
+.labels {
+    display: flex;
+    flex-direction: column;
+    height: 147px;
+    justify-content: space-between;
+}

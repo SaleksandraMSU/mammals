@@ -5,6 +5,7 @@ import { setFilters, setLayers } from '../../redux/actions';
 import { DEFAULT_GRADIENT, getFiltersState } from '../../redux';
 import { useState } from 'react';
 import { getRandomColor } from './select-utils';
+import { GRADIENT_ITEMS } from '../GradientPicker/gradient-picker-constants';
 
 type TSelectProps = {
     options: OptionsOrGroups<any, GroupBase<any>>,
@@ -26,13 +27,14 @@ export const FilterSelect = ({ options, title, value }: TSelectProps) => {
         
         dispatch(setFilters({ [value]: selected.map(option => parseInt(option.value)) }));
         if (value === "species") {
-            dispatch(setLayers(selected.map(option => (
+            dispatch(setLayers(selected.map((option, index) => (
                 {
                     title: option.label.split('|')[1].trim(),
                     value: +option.value,
                     opacity: 1,
                     color: getRandomColor(),
-                    gradient: DEFAULT_GRADIENT,
+                    gradient: GRADIENT_ITEMS[index].value,
+                    cellsStats: [],
                 }
             ))))
         }

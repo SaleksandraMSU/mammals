@@ -25,31 +25,19 @@ type TSpeciesGridProps = {
 export const SpeciesHeatmap = React.memo(({ speciesVal, opacity, gradient }: TSpeciesGridProps) => {
     const { map } = useMapContext();
     const { features } = useFeaturesContext();
-    const {
-        museum,
-        months,
-        dateRange,
-        determinationMethod,
-        isReliable
-    } = useSelector(getFiltersState);
     const { color1, color2, color3 } = gradient;
     const config = useSelector(getHeatmapConfig);
 
     const filtered = features.filter((f) => {
         return (
-            (speciesVal ? f.get('species') === speciesVal : true) &&
-            (museum.length > 0 ? museum.includes(f.get('genesis_da')) : true) &&
-            f.get('year') >= dateRange[0] && f.get('year') <= dateRange[1] &&
-            (months.length > 0 ? months.includes(f.get('month')) : true) &&
-            (determinationMethod.length > 0 ? determinationMethod.includes(f.get('determ')) : true) &&
-            (isReliable ? f.get('quality') === 3 : true)
+            speciesVal ? f.get('species') === speciesVal : true 
         )
     });
 
     const source = useMemo(() =>
         new VectorSource<Feature<Point>>({
             features: filtered,
-        }), [filtered]);
+        }), [features]);
 
     const layer = useMemo(() => (
         new HeatmapLayer({

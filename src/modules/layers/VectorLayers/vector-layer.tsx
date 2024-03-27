@@ -1,20 +1,9 @@
 import React from "react";
-import { Feature, Map, View } from 'ol';
-import { fromLonLat } from 'ol/proj';
-import TileLayer from 'ol/layer/Tile';
-import TileJSON from 'ol/source/TileJSON';
-import TileWMS from 'ol/source/TileWMS.js';
-import OlGeoJSON from 'ol/format/GeoJSON';
-import { MVT, WFS } from 'ol/format.js';
-import GeoJSON from 'ol/format/GeoJSON.js';
+import { Feature } from 'ol';
 import VectorSource from 'ol/source/Vector.js'
 import WebGLPointsLayer from 'ol/layer/WebGLPoints';
-import { Geometry, Point } from 'ol/geom';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import CircleStyle from 'ol/style/Circle.js';
-import Style from 'ol/style/Style';
-import Fill from 'ol/style/Fill';
-import Stroke from 'ol/style/Stroke';
+import { Point } from 'ol/geom';
+import { useEffect, useMemo } from 'react';
 import { useMapContext } from "../../map/map-context"
 import { useSelector } from 'react-redux';
 import {
@@ -27,16 +16,16 @@ import {
     getPointsConfig,
     getZoomConfig,
 } from '../../../redux';
-import styles from "./vector-layer.module.scss";
-import { useFeaturesContext } from '../features-context';
 import VectorTile from 'ol/layer/VectorTile.js';
 import VectorTileSource from 'ol/source/VectorTile.js';
 import WebGLVectorTileLayerRenderer from 'ol/renderer/webgl/VectorTileLayer.js';
 
+type TVectroLayerProps = {
+    features: Feature<Point>[];
+};
 
-export const VectorLayer = React.memo(() => {
+export const VectorLayer = React.memo(({ features }: TVectroLayerProps) => {
     const { map } = useMapContext();
-    const { features } = useFeaturesContext();
     const defaultLayer = useSelector(getDefaultLayer);
     const isDisplayChangeActive = useSelector(getIsDisplayMethodChange);
     const displayMethod = useSelector(getDisplayMethod);
@@ -57,7 +46,8 @@ export const VectorLayer = React.memo(() => {
                 "interpolate",
                 ["exponential", 2],
                 ["zoom"],
-                5, 1,
+                3, 1.2,
+                5, 2,
                 10, 4,
                 15, 8
             ] : config.pointRadius,
@@ -65,13 +55,13 @@ export const VectorLayer = React.memo(() => {
             ['match', ['get', 'species', 'number'],
                 layers[0].value!, layers[0].color!,
                 layers[1] ? layers[1].value! : 0,
-                layers[1] ? layers[1].color! : "#FF8000",
+                layers[1] ? layers[1].color : "#FF8000",
                 layers[2] ? layers[2].value! : 0,
-                layers[2] ? layers[2].color! : "#FF8000",
+                layers[2] ? layers[2].color : "#FF8000",
                 layers[3] ? layers[3].value! : 0,
-                layers[3] ? layers[3].color! : "#FF8000",
+                layers[3] ? layers[3].color : "#FF8000",
                 "#FF8000"
-            ] : defaultLayer.color!,
+            ] : defaultLayer.color,
         "circle-stroke-color": "black",
         "circle-stroke-width": 0,
         "circle-opacity": layers.length > 0 ?
@@ -114,14 +104,6 @@ export const VectorLayer = React.memo(() => {
 
     const source = useMemo(() =>
         new VectorSource<Feature<Point>>({
-            // url: 'src/rmm.geojson',
-            // format: new GeoJSON(),
-            // url: function () {
-            //     return (
-            //         'http://localhost:8080/geoserver/wfs?service=WFS&' +
-            //         'version=2.0.0&request=GetFeature&typename=mammals:rmm&' +
-            //         'outputFormat=application/json&srsname=EPSG:3857&'
-            //     );
             features: features
         }), [features]);
 
@@ -130,7 +112,7 @@ export const VectorLayer = React.memo(() => {
         new WebGLPointsLayer({
             source: source,
             style: style,
-            visible: displayMethod === EDisplayTypes.POINTS || displayMethod === EDisplayTypes.MIX,
+            visible: displayMethod === EDisplayTypes.POINTS,
         }
         ), [source, style, displayMethod]);
 
@@ -151,42 +133,5 @@ export const VectorLayer = React.memo(() => {
         }
     }, [map, layer, isDisplayChangeActive]);
 
-    // useEffect(() => {
-    //     !features.length ?
-    //         map.getTargetElement().classList.add(styles.spinner)
-    //         :
-    //         map.getTargetElement().classList.remove(styles.spinner);
-    // }, [map, features.length])
-
-    //  const layerWMS = new TileLayer({
-    //     source: new TileWMS({
-    //         url: "https://zmmu.msu.ru/geoserver/MammalsRussia/wms",
-    //         params: {'LAYERS': "MammalsRussia:data_basic", 'TILED': true },
-    //         serverType: 'geoserver'
-    //     }),
-    // });
-
     return null;
-
-
-
-
-    // const layer = new VectorLayer({
-    //     source: new VectorSource({
-    //         url: './src/mammals.geojson',
-    //         format: new GeoJSON(),
-    //     }),
-    //     style: new Style({
-    //         image: new CircleStyle({
-    //           radius: 5,
-    //           stroke: new Stroke({
-    //             color: 'blue',
-    //           }),
-    //           fill: new Fill({
-    //             color: 'red',
-    //           }),
-    //         }),
-    //     }),
-    //     declutter: true,
-    // })
 })

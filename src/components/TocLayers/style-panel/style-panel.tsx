@@ -17,7 +17,7 @@ export const StylePanel = ({ title, opacity, color, gradient, displayMethod }: T
     const dispatch = useDispatch();
     const isDisplayChangeActive = useSelector(getIsDisplayMethodChange)
     const allowPointsColor = [EDisplayTypes.POINTS, EDisplayTypes.MIX].includes(displayMethod as EDisplayTypes);
-    
+
 
     const onChange = (v: number) => {
         if (title === 'Все данные') {
@@ -47,12 +47,12 @@ export const StylePanel = ({ title, opacity, color, gradient, displayMethod }: T
                     onChange={onChange}
                 />
             </div>
-            {(!isDisplayChangeActive || displayMethod !== EDisplayTypes.POINTS )&& <GradientPicker title={title} gradient={gradient} />}
-            {allowPointsColor &&
-                <div className={styles.panel}>
-                    <label>Цвет точек</label>
-                    <input type="color" value={color} onChange={(e) => onColorChange(e.target.value)} />
-                </div>}
+            {(!isDisplayChangeActive || displayMethod !== EDisplayTypes.POINTS) && <GradientPicker title={title} gradient={gradient} />}
+
+            <div className={styles.panel}>
+                <label>Цвет точек</label>
+                <input type="color" value={color} onChange={(e) => onColorChange(e.target.value)} />
+            </div>
         </div>
     )
 }

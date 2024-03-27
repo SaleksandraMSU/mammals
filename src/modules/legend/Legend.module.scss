@@ -1,0 +1,45 @@
+.block {
+    position: absolute;
+    bottom: 30px;
+    top: auto;
+    right: 10px;
+    background: #fff;
+    padding: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    font-size: 14px;
+
+    &:hover {
+        cursor: pointer;
+        outline: 1px solid var(--ol-subtle-foreground-color);
+    }
+
+    &>div:first-child {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .grid {
+        margin-top: 0.7rem;
+        display: grid;
+        width: auto;
+        grid-template-columns: 20% 80%;
+        row-gap: 1rem;
+        column-gap: 0.6rem;
+        align-items: center;
+        // justify-items: center;
+    }
+}
+
+.active {
+    height: auto;
+    width: auto;
+    max-height: 230px;
+    max-width: 200px;
+    overflow-y: scroll;
+
+    &:hover {
+        cursor: default;
+    }
+}

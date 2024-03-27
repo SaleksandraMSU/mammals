@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { IGridConfig, IHeatmapConfig, ILayerConfrig, IPointConfig, IZoomConfig, TLayerUpdatePayload } from "./types";
+import { IGridConfig, IGridsCompare, IHeatmapConfig, ILayerConfrig, IPointConfig, IZoomConfig, TLayerUpdatePayload } from "./types";
 
 export const setFilters = createAction("setFilters", (value) => ({ payload: value }));
 export const resetFilters = createAction("resetFilters");
@@ -19,3 +19,7 @@ export const updateHeatmapConfig = createAction<Partial<IHeatmapConfig>>("update
 export const updatePointConfig = createAction<Partial<IPointConfig>>("updatePointConfig");
 
 export const setZoomParams = createAction<Partial<IZoomConfig>>("setZoomParams");
+
+export const setStatistics = createAction<number[]>("setStatistics");
+
+export const setCompareGridLayers = createAction<Partial<IGridsCompare>>("setCompareGridLayers");

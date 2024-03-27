@@ -13,6 +13,11 @@ export enum EGridTypes {
     TRIANGLE = "triangle",
 };
 
+export enum EGridsRenderMethods {
+    QUANTITY = "quantity",
+    QUALITY = "quality",
+};
+
 export const DEFAULT_GRADIENT = { color1: "#f5f500", color2: "#f57a00", color3: "#f50000"}
 
 export const DEFAULT_LAYER: ILayerConfrig = {
@@ -20,11 +25,13 @@ export const DEFAULT_LAYER: ILayerConfrig = {
     opacity: 1,
     color: "#FF8000",
     gradient: DEFAULT_GRADIENT,
+    cellsStats: [],
 };
 
 export const DEFAULT_GRID: IGridConfig = {
-    type: EGridTypes.SQUARE,
-    cellSize: 2,
+    type: EGridTypes.HEX,
+    cellSize: 150,
+    method: EGridsRenderMethods.QUANTITY,
 };
 
 export const DEFAULT_HEATMAP: IHeatmapConfig = {
