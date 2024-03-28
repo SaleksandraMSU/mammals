@@ -1,20 +1,12 @@
-import Layer from 'ol/layer/Layer.js';
-import GeoJSON from 'ol/format/GeoJSON';
-import VectorSource from 'ol/source/Vector.js';
-import WebGLVectorLayerRenderer from 'ol/renderer/webgl/VectorLayer.js';
-import * as turf from '@turf/turf';
-//@ts-ignore
-import pointsWithinPolygon from '@turf/points-within-polygon';
-//@ts-ignore
-import { toWgs84 } from "@turf/projection"
 import React, { useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { Heatmap as HeatmapLayer } from 'ol/layer.js';
+import VectorSource from 'ol/source/Vector';
 import { Feature } from 'ol';
 import { Point } from 'ol/geom';
-import { useMapContext } from '../../map/map-context';
+import { IGradientConfig, getHeatmapConfig } from '../../../redux';
+import { useMapContext } from '../../map';
 import { useFeaturesContext } from '../features-context';
-import { useSelector } from 'react-redux';
-import { IGradientConfig, getFiltersState, getHeatmapConfig } from '../../../redux';
-import { Heatmap as HeatmapLayer } from 'ol/layer.js';
 
 type TSpeciesGridProps = {
     speciesVal?: number;
@@ -22,7 +14,8 @@ type TSpeciesGridProps = {
     gradient: IGradientConfig;
 }
 
-export const SpeciesHeatmap = React.memo(({ speciesVal, opacity, gradient }: TSpeciesGridProps) => {
+export const Heatmap = React.memo((
+    { speciesVal, opacity, gradient }: TSpeciesGridProps) => {
     const { map } = useMapContext();
     const { features } = useFeaturesContext();
     const { color1, color2, color3 } = gradient;

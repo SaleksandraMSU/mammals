@@ -1,4 +1,4 @@
-import { DoubleSlider } from "../Slider/DoubleSlider"
+import { DoubleSlider } from "../Slider"
 import { FilterSelect } from "./Select"
 import { methods, months, museums, species } from "./data"
 
@@ -12,4 +12,4 @@ export const Filters = () => {
         <FilterSelect options={methods} title="Способ определения" value="determinationMethod" />
         </>
     )
-}
+};

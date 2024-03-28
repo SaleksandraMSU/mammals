@@ -1,3 +1,8 @@
+import { Feature } from "ol";
+import { Point } from "ol/geom";
+import { transform } from "ol/proj";
+import { EMapProjections } from "../../redux";
+
 export const hexToRgb = (hex: string) => {
     hex = hex.replace('#', '');
 
@@ -17,4 +22,24 @@ export const getInterimColor = (color1: number[], color2: number[], opacity?: nu
     const bMid = Math.round((b1 + b2) / 2);
 
     return [rMid, gMid, bMid, opacity];
+};
+
+export const createColorArray = (color: string, opacity: number) => {
+    const rgb = hexToRgb(color);
+    rgb.push(opacity);
+    return rgb;
+};
+
+export const reprojectPoint = (
+    feature: Feature<Point>,
+    srsproj: string,
+    destproj: EMapProjections,
+) => {
+    const newPoint = feature.clone();
+    const geometry = feature.getGeometry();
+    const coordinates = geometry!.getCoordinates();
+    const transformedCoordinates = transform(coordinates, srsproj, destproj);
+    const geom = new Point(transformedCoordinates);
+    newPoint.setGeometry(geom);
+    return newPoint;
 };

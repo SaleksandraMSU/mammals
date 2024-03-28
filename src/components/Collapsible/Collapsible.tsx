@@ -10,17 +10,6 @@ type TCollapsibleProps = {
 export const Collapsible = ({ label, children, defaultActive }: TCollapsibleProps) => {
     const [active, setActive] = useState(defaultActive);
 
-    // useEffect(() => {
-    //     if (collapseItems) {
-    //         setItems({
-    //             ...collapseItems.map(item => ({
-    //                 ...item,
-    //                 toggled: false
-    //             }))
-    //         })
-    //     }
-    // }, [collapseItems])
-
     const onClick = () => {
         setActive(!active)
     }
@@ -43,4 +32,4 @@ export const Collapsible = ({ label, children, defaultActive }: TCollapsibleProp
             </div>
         </div>
     )
-}
+};

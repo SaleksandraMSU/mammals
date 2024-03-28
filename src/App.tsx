@@ -1,19 +1,20 @@
-import MapComponent from './modules/map/map';
-import { Collapsible } from './components/Collapsible/Collapsible';
-import { Filters } from './components/Select/Filters';
-import { Checkbox } from './components/Checkbox/Checkbox';
-import { Toggle } from './components/Toggle/Toggle';
-import { BasemapsSelect } from './modules/layers/Basemaps/basemaps-select';
-import PopupControl from './modules/popup/Popup';
-import { ResetButton } from './components/Button/Button';
-import { TocLayers } from './components/TocLayers/Toc-layers';
-import { LayersCollection } from './modules/layers';
-import styles from "./App.module.scss";
-import { ParametersPanel } from './components/ParametersPanel/ParamsPanel';
-import { ZoomChange } from './components/ZoomChange/ZoomChange';
-import { StatisticsPanel } from './components/StatisticsPanel/Statistics-panel';
-import { Legend } from './modules/legend/Legend';
+import {
+  Checkbox,
+  Collapsible,
+  Filters,
+  Toggle,
+  TocLayers,
+  ResetButton,
+  ParametersPanel,
+  StatisticsPanel,
+  ZoomChange
+} from './components';
+import { MapComponent, ProjectionSelect } from './modules/map';
+import { BasemapsSelect, LayersCollection } from './modules/layers';
+import { PopupControl } from './modules/popup/';
+import { Legend } from './modules/legend';
 import { SpeciesComparePanel } from './components/SpeciesCompare/SpeciesComparePanel';
+import styles from "./App.module.scss";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
               <ParametersPanel />
               <TocLayers />
               <BasemapsSelect />
+              <ProjectionSelect />
             </Collapsible>
             <Collapsible label='Фильтрация'>
               <Filters />

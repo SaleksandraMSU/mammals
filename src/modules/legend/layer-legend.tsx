@@ -1,9 +1,17 @@
-import { useSelector } from "react-redux"
-import { FaCircle } from "react-icons/fa";
-import { EDisplayTypes, IGradientConfig, getDisplayMethod, getIsDisplayMethodChange, getZoomConfig } from "../../redux";
+import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { useMapContext } from "../map/map-context";
+import { FaCircle } from "react-icons/fa";
+import {
+    EDisplayTypes,
+    IGradientConfig,
+    getDisplayMethod,
+    getIsDisplayMethodChange,
+    getZoomConfig
+} from "../../redux";
+import { useMapContext } from "../map";
+import { GRID_DISPLAY_TYPES, POINT_DISPLAY_TYPES } from "../constants";
 import styles from "./layer-legend.module.scss";
+import { HEATMAP_LABELS } from "./legend-constants";
 
 type TLayerLegendProps = {
     visible: boolean;
@@ -13,18 +21,19 @@ type TLayerLegendProps = {
     labels: (string | number)[];
 }
 
-export const LayerLegend = ({ visible, opacity, color, gradient, labels }: TLayerLegendProps) => {
+export const LayerLegend = (
+    { visible, opacity, color, gradient, labels }: TLayerLegendProps) => {
+
     if (!visible) {
         return;
     }
 
-    const displayMethod = useSelector(getDisplayMethod) as EDisplayTypes;
+    const displayMethod = useSelector(getDisplayMethod);
     const isDisplayChange = useSelector(getIsDisplayMethodChange);
     const { map } = useMapContext();
     const [zoom, setZoom] = useState<number | undefined>(map.getView().getZoom())
     const zoomConfig = useSelector(getZoomConfig);
     const { color1, color2, color3 } = gradient;
-    const heatmapLabels = [1, 0.5, 0];
 
     const onZoomChange = () => {
         const currentZoom = map.getView().getZoom();
@@ -40,11 +49,11 @@ export const LayerLegend = ({ visible, opacity, color, gradient, labels }: TLaye
     });
 
     const isPointRender = isDisplayChange ?
-        [EDisplayTypes.POINTS, EDisplayTypes.MIX].includes(displayMethod)
+        POINT_DISPLAY_TYPES.includes(displayMethod)
         :
         Number(zoom) > zoomConfig.change;
     const isGradientRender = isDisplayChange ?
-        [EDisplayTypes.GRID, EDisplayTypes.MIX].includes(displayMethod)
+        GRID_DISPLAY_TYPES.includes(displayMethod)
         :
         Number(zoom) < zoomConfig.change;
     const isHeatmapRender = displayMethod === EDisplayTypes.HEATMAP;
@@ -87,7 +96,7 @@ export const LayerLegend = ({ visible, opacity, color, gradient, labels }: TLaye
                     >
                     </div>
                     <div className={styles.labels}>
-                        {heatmapLabels.map((l) =>
+                        {HEATMAP_LABELS.map((l) =>
                             <div key={l}>{l}</div>
                         )}
                     </div>

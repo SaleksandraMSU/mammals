@@ -1,11 +1,9 @@
 import type {
     Feature,
     Polygon,
-    FeatureCollection,
     GeoJsonProperties,
 } from "geojson";
-import { EGridTypes, EGridsRenderMethods } from "./constants"
-import { EBasemaps } from "../modules/layers"
+import { EGridTypes, EGridsRenderMethods, EBasemaps, EDisplayTypes } from "./constants"
 
 export interface IFiltersState {
     species: number[],
@@ -38,34 +36,34 @@ export interface IGridConfig {
     type: EGridTypes,
     cellSize: number,
     method: EGridsRenderMethods,
-}
+};
 
 export interface IHeatmapConfig {
     radius: number,
     blur: number,
     gradient?: string[],
-}
+};
 
 export interface IPointConfig {
     pointRadius: number,
     auto: boolean,
-}
+};
 
 export interface IZoomConfig {
     change: number,
     toLayer: number | null,
-}
+};
 
 export interface IGridsCompare {
     layer1: number | null,
     layer2: number | null,
     percentage?: number,
     area?: number,
-}
+};
 
 export interface ILayersState {
     allowDisplayChange: boolean,
-    showMethod: string,
+    showMethod: EDisplayTypes,
     basemap: EBasemaps,
     layers: ILayerConfrig[],
     defaultLayer: ILayerConfrig,
@@ -74,10 +72,10 @@ export interface ILayersState {
     grid: IGridConfig,
     heatmap: IHeatmapConfig,
     gridsCompare: IGridsCompare,
-}
+};
 
 export type TLayerUpdatePayload = {
     title: string,
     prop: string,
     value: any,
-}
+};

@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
+import { useSelector } from 'react-redux';
 import { Feature } from 'ol';
 import VectorSource from 'ol/source/Vector.js'
 import WebGLPointsLayer from 'ol/layer/WebGLPoints';
 import { Point } from 'ol/geom';
-import { useEffect, useMemo } from 'react';
-import { useMapContext } from "../../map/map-context"
-import { useSelector } from 'react-redux';
+import { useMapContext } from "../../map"
 import {
     EDisplayTypes,
     getDisplayMethod,

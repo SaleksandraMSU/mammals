@@ -9,4 +9,4 @@ export const GRID_RENDER_METHODS = [
         label: "Только виды",
         value: EGridsRenderMethods.QUALITY,
     },
-]
+];

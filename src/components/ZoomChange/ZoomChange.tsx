@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { getIsDisplayMethodChange, getZoomConfig, setZoomParams } from "../../redux"
-import { SingleSlider } from "../Slider/SingleSlider";
+import { SingleSlider } from "../Slider";
 import styles from "./ZoomChange.module.scss";
 
 export const ZoomChange = () => {

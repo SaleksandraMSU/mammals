@@ -1,8 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
+import {
+    EDisplayTypes,
+    IGradientConfig,
+    getIsDisplayMethodChange,
+    updateDefaultLayer,
+    updateSpeciesLayer
+} from "../../../redux";
+import { SingleSlider } from "../../Slider";
+import { GradientPicker } from "../../GradientPicker";
 import styles from "./style-panel.module.scss";
-import { EDisplayTypes, IGradientConfig, getIsDisplayMethodChange, updateDefaultLayer, updateSpeciesLayer } from "../../../redux";
-import { SingleSlider } from "../../Slider/SingleSlider";
-import { GradientPicker } from "../../GradientPicker/GradientPicker";
 
 type TStylePanelProps = {
     title: string,
@@ -12,11 +18,11 @@ type TStylePanelProps = {
     displayMethod: string,
 }
 
-export const StylePanel = ({ title, opacity, color, gradient, displayMethod }: TStylePanelProps) => {
-
+export const StylePanel = (
+    { title, opacity, color, gradient, displayMethod }: TStylePanelProps) => {
     const dispatch = useDispatch();
-    const isDisplayChangeActive = useSelector(getIsDisplayMethodChange)
-    const allowPointsColor = [EDisplayTypes.POINTS, EDisplayTypes.MIX].includes(displayMethod as EDisplayTypes);
+    const isDisplayChangeActive = useSelector(getIsDisplayMethodChange);
+    const isGradientRender = !isDisplayChangeActive || displayMethod !== EDisplayTypes.POINTS;
 
 
     const onChange = (v: number) => {
@@ -25,7 +31,7 @@ export const StylePanel = ({ title, opacity, color, gradient, displayMethod }: T
         } else {
             dispatch(updateSpeciesLayer({ title: title, prop: 'opacity', value: v }));
         };
-    }
+    };
 
     const onColorChange = (color: string) => {
         if (title === 'Все данные') {
@@ -33,7 +39,7 @@ export const StylePanel = ({ title, opacity, color, gradient, displayMethod }: T
         } else {
             dispatch(updateSpeciesLayer({ title: title, prop: 'color', value: color }));
         };
-    }
+    };
 
     return (
         <div className={styles.wrapper}>
@@ -47,11 +53,14 @@ export const StylePanel = ({ title, opacity, color, gradient, displayMethod }: T
                     onChange={onChange}
                 />
             </div>
-            {(!isDisplayChangeActive || displayMethod !== EDisplayTypes.POINTS) && <GradientPicker title={title} gradient={gradient} />}
-
+            {isGradientRender && <GradientPicker title={title} gradient={gradient} />}
             <div className={styles.panel}>
                 <label>Цвет точек</label>
-                <input type="color" value={color} onChange={(e) => onColorChange(e.target.value)} />
+                <input
+                    type="color"
+                    value={color}
+                    onChange={(e) => onColorChange(e.target.value)}
+                />
             </div>
         </div>
     )

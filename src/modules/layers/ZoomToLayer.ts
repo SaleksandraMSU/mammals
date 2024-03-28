@@ -1,27 +1,26 @@
-import { useDispatch, useSelector } from "react-redux"
-import { useMapContext } from "../map/map-context"
-import { useFeaturesContext } from "./features-context"
-import { getZoomConfig, setZoomParams } from "../../redux"
-import GeoJSON from 'ol/format/GeoJSON';
-import * as turf from '@turf/turf';
-//@ts-ignore
-import { toWgs84 } from "@turf/projection"
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-
+import * as turf from '@turf/turf';
+import GeoJSON from 'ol/format/GeoJSON';
+import { getMapProjection, getZoomConfig, setZoomParams } from "../../redux"
+import { useMapContext } from "../map"
+import { useFeaturesContext } from "./features-context"
 
 export const ZoomToLayer = () => {
-    const { features } = useFeaturesContext()
-    const { map } = useMapContext()
-    const zoom = useSelector(getZoomConfig)
+    const { features } = useFeaturesContext();
+    const { map } = useMapContext();
+    const zoom = useSelector(getZoomConfig);
     const dispatch = useDispatch();
+    const projection = useSelector(getMapProjection);
 
     useEffect(() => {
-        if (zoom.toLayer && features) { 
-            const all_feats = zoom.toLayer === 9999
-            const filtered = features.filter((f) => all_feats ? true : f.get('species') === zoom.toLayer);
+        if (zoom.toLayer && features) {
+            const all_feats = zoom.toLayer === 9999;
+            const filtered = features.filter((f) =>
+                !all_feats ? f.get('species') === zoom.toLayer : true);
             const collection = new GeoJSON().writeFeaturesObject(filtered, {
-                dataProjection: "EPSG:3857",
-                featureProjection: "EPSG:3857",
+                dataProjection: projection,
+                featureProjection: projection,
             });
             const extent = turf.bbox(collection);
 

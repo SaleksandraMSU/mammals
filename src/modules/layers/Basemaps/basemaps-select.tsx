@@ -14,7 +14,7 @@ export const BasemapsSelect = () => {
     };
 
     const CustomOption = (
-        { innerRef, data, isSelected, innerProps } : OptionProps<IBasemapItem>
+        { innerRef, data, isSelected, innerProps }: OptionProps<IBasemapItem>
     ) => (
         <div
             ref={innerRef}
@@ -33,11 +33,11 @@ export const BasemapsSelect = () => {
         { children, ...props }: ControlProps<IBasemapItem>
     ) => {
         const { value } = props.selectProps;
-        const style = {margin: "3px"};
+        const style = { margin: "3px" };
 
         return (
             <components.Control {...props}>
-                <img src={value!.icon} height={30} width={40} style={style}/>
+                <img src={(value as IBasemapItem).icon} height={30} width={40} style={style} />
                 {children}
             </components.Control>
         );

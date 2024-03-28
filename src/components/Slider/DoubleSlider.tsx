@@ -1,7 +1,7 @@
 import ReactSlider from 'react-slider';
-import "./Slider.scss";
 import { useDispatch, useSelector } from 'react-redux';
 import { getDates, setFilters } from '../../redux';
+import "./Slider.scss";
 
 export const DoubleSlider = () => {
     const dates = useSelector(getDates);

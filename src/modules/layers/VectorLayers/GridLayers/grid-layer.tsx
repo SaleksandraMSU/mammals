@@ -1,38 +1,55 @@
-import React, { useState } from "react";
-import { useEffect, useMemo } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import { useSelector } from 'react-redux';
 import Layer from 'ol/layer/Layer.js';
 import VectorSource from 'ol/source/Vector.js';
 import { Feature } from "ol";
-import { Geometry } from "ol/geom";
+import { Polygon } from "ol/geom";
 import WebGLVectorLayerRenderer from 'ol/renderer/webgl/VectorLayer.js';
-import { useMapContext } from '../../map/map-context';
-import { EDisplayTypes, getDefaultLayer, getDisplayMethod, getLayers } from '../../../redux';
-import { getInterimColor, hexToRgb } from "../layers-utils";
-import { getGeoserverFeatures } from "../../../service/features-service";
+import { 
+    EDisplayTypes, 
+    getDefaultLayer, 
+    getDisplayMethod, 
+    getLayers,
+    getMapProjection
+} from '../../../../redux';
+import { getGeoserverFeatures } from "../../../../service";
+import { useMapContext } from '../../../map';
+import { createColorArray, getInterimColor } from "../../layers-utils";
 
 export const GridLayer = React.memo(() => {
     const { map } = useMapContext();
     const { opacity, gradient } = useSelector(getDefaultLayer);
-    const layers = useSelector(getLayers)
+    const layers = useSelector(getLayers);
     const displayMethod = useSelector(getDisplayMethod);
-    const [gridFeatures, setGridFeatures] = useState<Feature<Geometry>[]>([])
+    const [gridFeatures, setGridFeatures] = useState<Feature<Polygon>[]>([]);
+    const projection = useSelector(getMapProjection);
+    const ref = useRef<string>(projection);
 
     useEffect(() => {
-        getGeoserverFeatures("grid")
+        getGeoserverFeatures("grid", projection)
             .then((feats) =>
-                setGridFeatures(feats));
+                setGridFeatures(feats as Feature<Polygon>[]));
+        ref.current = projection;
     }, [])
 
+    useEffect(() => {
+        const dataProjected = gridFeatures.map((pol) => {
+            const newPol = pol.clone();
+            const geom = pol.getGeometry()?.transform(ref.current, projection);
+            newPol.setGeometry(geom);
+            return newPol;
+        })
+        setGridFeatures(dataProjected);
+        ref.current = projection;
+    }, [projection])
+
     const colors = Object.values(gradient).map((hex) => {
-        const color = hexToRgb(hex);
-        color.push(opacity)
-        return color;
+        return createColorArray(hex, opacity);
     });
 
     const style = {
         'stroke-color': [0, 0, 0, opacity],
-        'stroke-width': 0.8,
+        'stroke-width': 1,
         'fill-color': [
             'interpolate',
             ['linear'],
@@ -64,10 +81,9 @@ export const GridLayer = React.memo(() => {
         new WebGLLayer({
             source: source,
             zIndex: 5,
-            visible: (displayMethod === EDisplayTypes.GRID || displayMethod === EDisplayTypes.MIX) && 
-            !layers.length
+            visible: !layers.length,
         })
-    ), [style, source])
+    ), [style, source, layers.length])
 
     useEffect(() => {
         map.addLayer(grid);

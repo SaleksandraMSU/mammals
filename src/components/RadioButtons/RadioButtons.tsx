@@ -1,23 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 import cn from "classnames";
-import styles from "./RadioButtons.module.scss";
-import { EDisplayTypes, EGridsRenderMethods, getDisplayMethod, getGridConfig, getLayers, updateGridConfig } from "../../redux";
-import { GRID_RENDER_METHODS } from "./constants";
 import { useEffect } from "react";
-
+import { EGridsRenderMethods, getGridConfig, updateGridConfig } from "../../redux";
+import { GRID_RENDER_METHODS } from "./constants";
+import styles from "./RadioButtons.module.scss";
 
 export const RadioButtons = () => {
-
     const { method } = useSelector(getGridConfig);
     const dispatch = useDispatch();
 
-    const onClick = (e: MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const onClick = (e: any) => {
         dispatch(updateGridConfig({ method: e.target.value }))
-    }
+    };
 
     useEffect(() => {
         return () => {
-            dispatch(updateGridConfig({ method: EGridsRenderMethods.QUANTITY }))
+            dispatch(updateGridConfig({ method: EGridsRenderMethods.QUANTITY }));
         }
     }, [dispatch]);
 
@@ -25,6 +23,7 @@ export const RadioButtons = () => {
         <div className={styles.wrapper}>
             {GRID_RENDER_METHODS.map((m) =>
                 <button
+                    key={m.value}
                     className={cn(styles.button, {
                         [styles.active]: method === m.value
                     })}

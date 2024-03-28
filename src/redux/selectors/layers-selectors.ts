@@ -1,40 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { TRootState } from "./reducers/root-reducer";
-import { initialState } from "./reducers/filters-reducer";
+import { TRootState } from "../reducers/root-reducer";
 
-export const getFiltersState = (state: TRootState) => state.filters;
-export const getLayersState = (state: TRootState) => state.layers;
-
-export const getSpecies = createSelector(
-    getFiltersState,
-    (state) => state.species
-);
-
-export const getMuseum = createSelector(
-    getFiltersState,
-    (state) => state.museum
-);
-
-export const getDates = createSelector(
-    getFiltersState,
-    (state) => state.dateRange
-);
-
-export const getIsPhoto = createSelector(
-    getFiltersState,
-    (state) => state.isPhoto
-);
-
-export const getIsReliable = createSelector(
-    getFiltersState,
-    (state) => state.isReliable
-);
-
-export const getIsZeroFilters = createSelector(
-    getFiltersState,
-    (state) => JSON.stringify(state) === JSON.stringify(initialState)
-);
-
+const getLayersState = (state: TRootState) => state.layers;
 
 export const getDisplayMethod = createSelector(
     getLayersState,
@@ -45,6 +12,9 @@ export const getIsDisplayMethodChange = createSelector(
     getLayersState,
     (state) => state.allowDisplayChange
 );
+
+
+
 
 export const getActiveBasemap = createSelector(
     getLayersState,
@@ -60,6 +30,9 @@ export const getDefaultLayer = createSelector(
     getLayersState,
     (state) => state.defaultLayer
 );
+
+
+
 
 export const getGridConfig = createSelector(
     getLayersState,

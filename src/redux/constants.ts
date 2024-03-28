@@ -18,7 +18,22 @@ export enum EGridsRenderMethods {
     QUALITY = "quality",
 };
 
-export const DEFAULT_GRADIENT = { color1: "#f5f500", color2: "#f57a00", color3: "#f50000"}
+export enum EMapProjections {
+    EPSG_3857 = "EPSG:3857",
+    EPSG_3576 = "EPSG:3576",
+    EPSG_102025 = "EPSG:102025",
+};
+
+export enum EBasemaps {
+    YANDEX = "Yandex",
+    OSM = "OSM",
+    SATELLITE = "Satellite",
+    TOPOMAPS = "Topomaps",
+    STAMEN = "Stamen",
+    ESRI = "Esri",
+};
+
+export const DEFAULT_GRADIENT = { color1: "#f5f500", color2: "#f57a00", color3: "#f50000"};
 
 export const DEFAULT_LAYER: ILayerConfrig = {
     title: "Все данные",
@@ -29,7 +44,7 @@ export const DEFAULT_LAYER: ILayerConfrig = {
 };
 
 export const DEFAULT_GRID: IGridConfig = {
-    type: EGridTypes.HEX,
+    type: EGridTypes.SQUARE,
     cellSize: 150,
     method: EGridsRenderMethods.QUANTITY,
 };
@@ -42,7 +57,4 @@ export const DEFAULT_HEATMAP: IHeatmapConfig = {
 export const DEFAULT_POINTS: IPointConfig = {
     pointRadius: 1,
     auto: true,
-}
-
-
-
+};

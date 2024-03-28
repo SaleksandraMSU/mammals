@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import Select from 'react-select';
 import { EGridTypes, getGridConfig, updateGridConfig } from "../../redux";
+import { SingleSlider } from "../Slider";
 import styles from "./ParamsPanel.module.scss";
-import { SingleSlider } from "../Slider/SingleSlider";
 
 export const GridParameters = () => {
     const config = useSelector(getGridConfig);
@@ -12,7 +12,7 @@ export const GridParameters = () => {
         { value: EGridTypes.SQUARE, label: 'Квадратная' },
         { value: EGridTypes.HEX, label: 'Гексагональная' },
         { value: EGridTypes.TRIANGLE, label: 'Треугольная' },
-    ]
+    ];
 
     const onTypeChange = (selected: any) => {
         dispatch(updateGridConfig({ 'type': selected.value }));
@@ -38,7 +38,7 @@ export const GridParameters = () => {
             />
         </div>
         <div className={styles.wrapper}>
-            <label>Размер ячейки</label>
+            <label>Размер ячейки (км)</label>
             <SingleSlider
                 min={25}
                 max={500}

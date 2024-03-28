@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import cn from "classnames";
 import Select from 'react-select';
-import styles from "./Legend.module.scss";
 import { useSelector } from "react-redux";
 import { getDefaultLayer, getIsZeroFilters, getLayers } from "../../redux";
-import { LayerLegend } from "./point-legend";
+import { LayerLegend } from "./layer-legend";
+import styles from "./Legend.module.scss";
+import { DEFAULT_LAYER_LABELS, FILTERED_LAYER_LABELS } from "./legend-constants";
 
 type TOption = {
     value: number,
     label: string,
-}
+};
 
 export const Legend = React.memo(() => {
     const [active, setActive] = useState(false);
@@ -33,10 +34,7 @@ export const Legend = React.memo(() => {
             });
             setOptions(options);
         }
-    }, [layers])
-
-    const defaultLabels = ["375 и более", 170, 50, 15, 1];
-    const layerLabels = ["20 и более", 15, 10, 5, 1];
+    }, [layers]);
 
     return (
         <div
@@ -65,7 +63,7 @@ export const Legend = React.memo(() => {
                                     opacity={l.opacity}
                                     color={l.color}
                                     gradient={l.gradient}
-                                    labels={layerLabels}
+                                    labels={DEFAULT_LAYER_LABELS}
                                 />
                             )
                             :
@@ -74,7 +72,7 @@ export const Legend = React.memo(() => {
                                 opacity={defaultLyr.opacity}
                                 color={defaultLyr.color}
                                 gradient={defaultLyr.gradient}
-                                labels={isNoFilters ? defaultLabels : layerLabels}
+                                labels={isNoFilters ? DEFAULT_LAYER_LABELS : FILTERED_LAYER_LABELS}
                             />
                         }
 

@@ -2,13 +2,13 @@ import axios from 'axios';
 import { WFS } from 'ol/format.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import Filter from 'ol/format/filter/Filter';
-import { PROJECTION_STR } from '../modules/map/projection';
 
 export const getGeoserverFeatures = async (
     layer: string,
+    crs: string,
 ) => {
     const featureRequest = new WFS().writeGetFeature({
-        srsName: PROJECTION_STR,
+        srsName: crs,
         featureNS: 'mammals',
         featurePrefix: 'mammals',
         featureTypes: [`${layer}`],
@@ -27,8 +27,8 @@ export const getGeoserverFeatures = async (
         })
         .then(function (json) {
             const feats = new GeoJSON().readFeatures(json, {
-                dataProjection: PROJECTION_STR,
-                featureProjection: PROJECTION_STR,
+                dataProjection: crs,
+                featureProjection: crs,
             })
             return feats;
         });

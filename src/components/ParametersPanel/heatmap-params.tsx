@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getHeatmapConfig, updateHeatmapConfig } from "../../redux";
+import { SingleSlider } from "../Slider";
 import styles from "./ParamsPanel.module.scss";
-import { SingleSlider } from "../Slider/SingleSlider";
 
 export const HeatmapParameters = () => {
     const config = useSelector(getHeatmapConfig);

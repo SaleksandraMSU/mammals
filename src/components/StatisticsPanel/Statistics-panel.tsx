@@ -11,10 +11,10 @@ import {
     getIsZeroFilters,
     getLayers
 } from "../../redux";
+import { getFeaturesCount } from "../../service";
 import { StatisticsItem } from "../StatisticsItem";
 import { DEFAULT_ITEMS } from "./statistics-constants";
 import { getMedian, createFilter, getItems } from "./statistics-utils";
-import { getFeaturesCount } from "../../service";
 import styles from "./Statistics-panel.module.scss";
 
 export const StatisticsPanel = () => {
@@ -22,7 +22,7 @@ export const StatisticsPanel = () => {
     const defaultLayer = useSelector(getDefaultLayer);
     const isNoFilters = useSelector(getIsZeroFilters);
     const isDisplayChange = useSelector(getIsDisplayMethodChange);
-    const displayMethod = useSelector(getDisplayMethod) as EDisplayTypes;
+    const displayMethod = useSelector(getDisplayMethod);
     const {
         species,
         museum,
@@ -45,11 +45,12 @@ export const StatisticsPanel = () => {
     useEffect(() => {
         if (layers.length > 0) {
             layers.forEach((l) => {
-            const stats = l.cellsStats.map((cell) => cell.properties!.density as number)
-            statistics.push(...stats)})
+                const stats = l.cellsStats.map((cell) => cell.properties!.density as number);
+                statistics.push(...stats)
+            });
         } else {
-            const stats = defaultLayer.cellsStats.map((cell) => cell.properties!.density as number)
-            statistics = stats
+            const stats = defaultLayer.cellsStats.map((cell) => cell.properties!.density as number);
+            statistics = stats;
         };
 
         if (statistics.length) {
@@ -61,9 +62,9 @@ export const StatisticsPanel = () => {
             const median = getMedian(statistics);
             setVars({ mean, max, min, median });
         } else {
-            setVars(initVars)
+            setVars(initVars);
         }
-    }, [layers, defaultLayer])
+    }, [layers, defaultLayer]);
 
     useEffect(() => {
         const speciesFilter = createFilter(species, "species");

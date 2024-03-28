@@ -1,11 +1,4 @@
-export enum EBasemaps {
-    YANDEX = "Yandex",
-    OSM = "OSM",
-    SATELLITE = "Satellite",
-    TOPOMAPS = "Topomaps",
-    STAMEN = "Stamen",
-    ESRI = "Esri",
-};
+import { EBasemaps } from "../../../redux";
 
 export interface IBasemapItem {
     label: string,
@@ -51,7 +44,7 @@ export const basemaps = [
         key: EBasemaps.YANDEX,
         url: 'https://core-renderer-tiles.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}',
         attributions: "© Яндекс <a target='_blank' href='https://yandex.ru/legal/maps_termsofuse/?lang=ru'>Условия использования</a>",
-        proj: "EPSG:3395",
+        proj: undefined,
     },
     {
         key: EBasemaps.OSM,

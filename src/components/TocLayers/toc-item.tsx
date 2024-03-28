@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { AiFillEdit } from "react-icons/ai";
 import { TbZoomInAreaFilled } from "react-icons/tb";
 import cn from "classnames";
+import { IGradientConfig, getDisplayMethod, setZoomParams } from "../../redux";
 import { StylePanel } from "./style-panel";
 import styles from "./Toc-layers.module.scss";
-import { IGradientConfig, getDisplayMethod, setZoomParams } from "../../redux";
 
 type TTocItemProps = {
     title: string,
@@ -23,7 +23,7 @@ export const TocItem = ({ title, value, opacity, color, gradient }: TTocItemProp
 
     const onZoomClick = () => {
         dispatch(setZoomParams({ toLayer: value }));
-    }
+    };
 
     return (
         <>
@@ -39,9 +39,9 @@ export const TocItem = ({ title, value, opacity, color, gradient }: TTocItemProp
                     />
                     <TbZoomInAreaFilled
                         size={20}
-                        className={styles.icon} 
+                        className={styles.icon}
                         onClick={() => onZoomClick()}
-                        />
+                    />
                 </div>
             </div>
             {styleActive &&

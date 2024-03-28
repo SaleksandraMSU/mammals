@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getPointsConfig, updatePointConfig } from "../../redux";
+import { SingleSlider } from "../Slider";
 import styles from "./ParamsPanel.module.scss";
-import { SingleSlider } from "../Slider/SingleSlider";
 
 export const PointsParameters = () => {
     const config = useSelector(getPointsConfig);

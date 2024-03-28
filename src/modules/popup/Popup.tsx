@@ -1,12 +1,10 @@
 import Overlay from 'ol/Overlay.js';
-import { useEffect, useRef, useState } from 'react';
-import { Control } from 'ol/control';
+import { useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
+import { useMapContext } from '../map';
 import './popup-style.scss';
-import { useMapContext } from '../map/map-context';
 
-
-const PopupControl = () => {
+export const PopupControl = () => {
   const { map } = useMapContext();
   const popupRef = useRef(null);
 
@@ -23,16 +21,21 @@ const PopupControl = () => {
         const attributes = feature.getProperties();
         const popupContent = (
           <div>
-            <button className="popup-closer" onClick={() => overlay.setPosition(undefined)}></button>
-            {Object.keys(attributes).filter((key) => key !== "geometry").map((key) => (
-              <p key={key}>
-                <strong>{key}: </strong>
-                {JSON.stringify(attributes[key])}
-              </p>
-            ))}
+            <button
+              className="popup-closer"
+              onClick={() => overlay.setPosition(undefined)}
+            />
+            {Object.keys(attributes)
+              .filter((key) => key !== "geometry")
+              .map((key) => (
+                <p key={key}>
+                  <strong>{key}: </strong>
+                  {JSON.stringify(attributes[key])}
+                </p>
+              ))}
           </div>
         );
-        createRoot(popupRef.current!).render(popupContent)
+        createRoot(popupRef.current!).render(popupContent);
         overlay.setPosition(coordinate);
       });
     });
@@ -46,5 +49,3 @@ const PopupControl = () => {
     </div>
   );
 };
-
-export default PopupControl;

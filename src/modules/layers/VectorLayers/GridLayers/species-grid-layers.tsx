@@ -1,22 +1,21 @@
 import { useSelector } from "react-redux";
 import React, { useCallback, useEffect, useState } from "react";
-import { FeatureCollection, Polygon, GeoJsonProperties } from "geojson";
 import * as turf from '@turf/turf';
 import {
     getDefaultLayer,
     getGridConfig,
     getIsZeroFilters,
     getLayers,
-    EDisplayTypes,
-    getDisplayMethod,
-    getIsDisplayMethodChange,
-    ILayerConfrig
-} from "../../../redux";
+} from "../../../../redux";
+import type { geoJsonPolygon, polygonFeatureCollection } from "../vector-layers-types";
 import { SpeciesGrid } from "./species-grid";
 import { GridLayer } from "./grid-layer";
 import { createGrid } from "./grid-utils";
+import { GridContext } from "./grid-context";
+import { SpeciesGridsOverlapLayer } from "./species-grids-overlap-layer";
 
-export const SpeciesGridLayers = React.memo(() => {
+export const GridLayers = React.memo(() => {
+    const [overlapFeatures, setOverlapFeatures] = useState<geoJsonPolygon[]>([]);
     const speciesLayers = useSelector(getLayers);
     const isNoFilters = useSelector(getIsZeroFilters);
     const config = useSelector(getGridConfig);
@@ -30,7 +29,7 @@ export const SpeciesGridLayers = React.memo(() => {
         return featureCollection
     }, [config]);
 
-    const [grid, setGrid] = useState<FeatureCollection<Polygon, GeoJsonProperties>>(generateGrid);
+    const [grid, setGrid] = useState<polygonFeatureCollection>(generateGrid);
 
     useEffect(() => {
         const gridFeatures = generateGrid();
@@ -38,19 +37,22 @@ export const SpeciesGridLayers = React.memo(() => {
     }, [generateGrid]);
 
     return (
-        <>
+        <GridContext.Provider value={{ overlapFeatures, setOverlapFeatures }}>
             {speciesLayers.length > 0 ?
-                speciesLayers.map((l) =>
-                    <SpeciesGrid
-                        key={l.value}
-                        grid={grid}
-                        speciesVal={l.value}
-                        title={l.title}
-                        opacity={l.opacity}
-                        gradient={l.gradient}
-                        color={l.color}
-                    />
-                )
+                <>
+                    {speciesLayers.map((l) =>
+                        <SpeciesGrid
+                            key={l.value}
+                            grid={grid}
+                            speciesVal={l.value}
+                            title={l.title}
+                            opacity={l.opacity}
+                            gradient={l.gradient}
+                            color={l.color}
+                        />
+                    )}
+                    {speciesLayers.length > 1 && <SpeciesGridsOverlapLayer />}
+                </>
                 :
                 isNoFilters ?
                     <GridLayer />
@@ -63,6 +65,6 @@ export const SpeciesGridLayers = React.memo(() => {
                         color={color}
                     />
             }
-        </>
+        </GridContext.Provider>
     )
 })

@@ -5,6 +5,7 @@ import {
     DEFAULT_HEATMAP,
     DEFAULT_LAYER,
     DEFAULT_POINTS,
+    EBasemaps,
     EDisplayTypes
 } from "../constants";
 import {
@@ -20,7 +21,6 @@ import {
     setZoomParams,
     setCompareGridLayers,
 } from "../actions";
-import { EBasemaps } from "../../modules/layers";
 
 const initialState: ILayersState = {
     allowDisplayChange: false,

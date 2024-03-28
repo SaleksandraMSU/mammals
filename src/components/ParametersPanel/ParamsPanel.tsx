@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
+import { useState } from "react";
 import { AiFillPlusSquare, AiFillMinusSquare } from "react-icons/ai";
-import styles from "./ParamsPanel.module.scss";
 import { EDisplayTypes, getDisplayMethod, getIsDisplayMethodChange } from "../../redux";
 import { GridParameters } from "./grid-params";
-import { useState } from "react";
 import { HeatmapParameters } from "./heatmap-params";
 import { PointsParameters } from "./point-params";
+import styles from "./ParamsPanel.module.scss";
 
 export const ParametersPanel = () => {
     const isDisplayChangeActive = useSelector(getIsDisplayMethodChange);
@@ -15,6 +15,10 @@ export const ParametersPanel = () => {
     if (!isDisplayChangeActive) {
         return;
     }
+
+    const isPointParams = displayMethod === EDisplayTypes.POINTS || displayMethod === EDisplayTypes.MIX;
+    const isGridParams = displayMethod === EDisplayTypes.GRID || displayMethod === EDisplayTypes.MIX;
+    const isHeatmapParams = displayMethod === EDisplayTypes.HEATMAP;
 
     return (
         <>
@@ -26,9 +30,9 @@ export const ParametersPanel = () => {
             </div>
             {active &&
                 <div className={styles.panel}>
-                    {(displayMethod === EDisplayTypes.POINTS || displayMethod === EDisplayTypes.MIX) && <PointsParameters />}
-                    {(displayMethod === EDisplayTypes.GRID || displayMethod === EDisplayTypes.MIX) && <GridParameters />}
-                    {displayMethod === EDisplayTypes.HEATMAP && <HeatmapParameters />}
+                    {isPointParams && <PointsParameters />}
+                    {isGridParams && <GridParameters />}
+                    {isHeatmapParams && <HeatmapParameters />}
                 </div>
             }
         </>

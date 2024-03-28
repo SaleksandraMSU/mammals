@@ -1,61 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import type {
-    Feature as GeoJsonFeature,
-    Point as GeoJsonPoint,
-    Polygon as GeoJsonPolygon,
-    FeatureCollection,
-    GeoJsonProperties,
-} from "geojson";
 import Layer from 'ol/layer/Layer.js';
+import { Feature } from 'ol';
+import { Point, Polygon } from 'ol/geom';
 import GeoJSON from 'ol/format/GeoJSON';
 import VectorSource from 'ol/source/Vector.js';
 import WebGLVectorLayerRenderer from 'ol/renderer/webgl/VectorLayer.js';
-import { fromLonLat, transform } from 'ol/proj';
+import { transform } from 'ol/proj';
 import * as turf from '@turf/turf';
-import { useEffect, useMemo } from 'react';
-import { Feature } from 'ol';
-import { Geometry, Point, Polygon } from 'ol/geom';
-import { useMapContext } from '../../map/map-context';
-import { useFeaturesContext } from '../features-context';
-import { EDisplayTypes, EGridsRenderMethods, IGradientConfig, getDisplayMethod, getFiltersState, getGridConfig, getIsDisplayMethodChange, getLayers, getZoomConfig, updateDefaultLayer, updateSpeciesLayer } from '../../../redux';
-import { getInterimColor, hexToRgb } from "../layers-utils";
-import { VectorLayerMix } from "./vector-layer-mix";
-import { PROJECTION_STR } from "../../map/projection";
+import {
+    EDisplayTypes,
+    EGridsRenderMethods,
+    IGradientConfig,
+    getDisplayMethod,
+    getGridConfig,
+    getIsDisplayMethodChange,
+    getZoomConfig,
+    updateDefaultLayer,
+    updateSpeciesLayer
+} from '../../../../redux';
+import { useMapContext } from '../../../map/map-context';
+import { useFeaturesContext } from '../../features-context';
+import { createColorArray, getInterimColor } from "../../layers-utils";
+import type {
+    geoJsonPoint,
+    geoJsonPolygon,
+    pointFeatureCollection,
+    polygonFeatureCollection
+} from "../vector-layers-types";
+import { VectorLayerMix } from "../vector-layer-mix";
+import { useGridContext } from "./grid-context";
+
 
 type TSpeciesGridProps = {
     speciesVal?: number;
     title?: string;
-    grid: FeatureCollection<GeoJsonPolygon, GeoJsonProperties>
+    grid: polygonFeatureCollection;
     opacity: number;
     gradient: IGradientConfig;
     color: string;
 }
 
-export const SpeciesGrid = React.memo(({ speciesVal, title, opacity, gradient, color, grid }: TSpeciesGridProps) => {
+export const SpeciesGrid = React.memo((
+    { speciesVal, title, opacity, gradient, color, grid }: TSpeciesGridProps) => {
     const { map } = useMapContext();
     const { features } = useFeaturesContext();
+    const { overlapFeatures } = useGridContext();
     const dispatch = useDispatch();
     const config = useSelector(getGridConfig);
     const isDisplayChangeActive = useSelector(getIsDisplayMethodChange);
     const displayMethod = useSelector(getDisplayMethod);
     const zoom = useSelector(getZoomConfig);
-    const [gridFeats, setGridFeats] = useState<Feature<Geometry>[]>([]);
+    const [gridFeats, setGridFeats] = useState<Feature<Polygon>[]>([]);
     const [featuresOutOfCells, setFeaturesOutOfCells] = useState<Feature<Point>[]>([]);
-
+    const projection = map.getView().getProjection().getCode();
     const isQuantities = config.method === EGridsRenderMethods.QUANTITY;
 
     useEffect(() => {
-        const cellsWithData: GeoJsonFeature<GeoJsonPolygon, GeoJsonProperties>[] = [];
+        const cellsWithData: geoJsonPolygon[] = [];
         const filtered = features.filter((f) => {
             return (
                 speciesVal ? f.get('species') === speciesVal : true
             )
-        })
+        });
 
         const projectedFeatures = filtered.map((feat) => {
             const coords = feat.getGeometry()?.getCoordinates()
-            const transformedCoords = transform(coords!, PROJECTION_STR, "EPSG:4326");
+            const transformedCoords = transform(coords!, projection, "EPSG:4326");
             const transformedGeometry = new Point(transformedCoords);
             const transformedFeature = new Feature({
                 geometry: transformedGeometry,
@@ -63,8 +74,7 @@ export const SpeciesGrid = React.memo(({ speciesVal, title, opacity, gradient, c
             return transformedFeature;
         })
 
-        const collection = new GeoJSON().writeFeaturesObject(projectedFeatures) as FeatureCollection<GeoJsonPoint, GeoJsonProperties>;
-        // const projected = turf.toWgs84(collection, { mutate: true }) as FeatureCollection<GeoJsonPoint, GeoJsonProperties>
+        const collection = new GeoJSON().writeFeaturesObject(projectedFeatures) as pointFeatureCollection;
         const speciesBBox = turf.bbox(collection);
         const speciesBBoxPolygon = turf.bboxPolygon(speciesBBox);
         const pointFeatures: Feature<Point>[] = [];
@@ -73,21 +83,23 @@ export const SpeciesGrid = React.memo(({ speciesVal, title, opacity, gradient, c
             if (turf.booleanIntersects(cell, speciesBBoxPolygon)) {
                 let count = 0;
                 try {
-                    const pointsWithin = turf.pointsWithinPolygon(collection, cell).features as GeoJsonFeature<GeoJsonPoint, GeoJsonProperties>[]
+                    const pointsWithin = turf.pointsWithinPolygon(collection, cell).features as geoJsonPoint[]
                     count = pointsWithin.length;
+                    // for statistics calculation
                     if (count > 0) {
                         cellsWithData.push({ ...cell, properties: { density: count, species: speciesVal } });
                     }
+                    // for mix display
                     if (count === 1) {
                         const features = pointsWithin.map((f) => new Feature({
-                            geometry: new Point(f.geometry.coordinates).transform("EPSG:4326", PROJECTION_STR),
+                            geometry: new Point(f.geometry.coordinates).transform("EPSG:4326", projection),
                             ...f.properties
                         }))
                         pointFeatures.push(...features);
                     }
                 }
                 catch (e) {
-                    console.log(e)
+                    console.log(e);
                 }
                 return { ...cell, properties: { density: count } };
             } else {
@@ -99,12 +111,18 @@ export const SpeciesGrid = React.memo(({ speciesVal, title, opacity, gradient, c
             .filter((el) => el)
             .map((cell) => {
                 return new Feature({
-                    geometry: new Polygon(cell!.geometry.coordinates).transform("EPSG:4326", PROJECTION_STR),
+                    geometry:
+                        new Polygon(cell!.geometry.coordinates)
+                            .transform("EPSG:4326", projection),
                     Count: cell!.properties!.density
                 });
             });
         if (speciesVal) {
-            dispatch(updateSpeciesLayer({ title: title!, prop: 'cellsStats', value: cellsWithData }));
+            dispatch(updateSpeciesLayer({
+                title: title!,
+                prop: 'cellsStats',
+                value: cellsWithData
+            }));
         } else {
             dispatch(updateDefaultLayer({ 'cellsStats': cellsWithData }));
         }
@@ -112,13 +130,12 @@ export const SpeciesGrid = React.memo(({ speciesVal, title, opacity, gradient, c
         setFeaturesOutOfCells(pointFeatures);
     }, [
         features,
-        grid
-    ])
+        grid,
+        projection,
+    ]);
 
     const colors = Object.values(gradient).map((hex) => {
-        const color = hexToRgb(hex);
-        color.push(opacity);
-        return color;
+        return createColorArray(hex, opacity);
     });
 
     const style = {
@@ -133,7 +150,7 @@ export const SpeciesGrid = React.memo(({ speciesVal, title, opacity, gradient, c
             10, colors[1],
             15, getInterimColor(colors[1], colors[2], opacity),
             20, colors[2],
-        ] : color,
+        ] : createColorArray(color, opacity),
         filter: displayMethod === EDisplayTypes.MIX ? [">", ['get', 'Count', 'number'], 1] : [">", ['get', 'Count', 'number'], 0],
     };
 
@@ -147,7 +164,26 @@ export const SpeciesGrid = React.memo(({ speciesVal, title, opacity, gradient, c
 
     const source = useMemo(() => (
         new VectorSource({ features: gridFeats })
-    ), [gridFeats])
+    ), [gridFeats]);
+
+    useEffect(() => {
+        if (overlapFeatures.length) {
+            const featsToKeep = gridFeats.filter((cell) => {
+                const geometry = cell.getGeometry();
+                if (!geometry) return false;
+                const reprojectedCell = geometry.clone().transform(projection, "EPSG:4326");
+                const geoJsonCell = turf.polygon(reprojectedCell.getCoordinates());
+                const cond = overlapFeatures.some((feat) =>
+                    turf.booleanContains(geoJsonCell, feat)
+                );
+                return !cond;
+            });
+
+            if (featsToKeep.length !== gridFeats.length) {
+                setGridFeats(featsToKeep);
+            }
+        }
+    }, [overlapFeatures, projection]);
 
     const layer = useMemo(() => (
         new WebGLLayer({
@@ -157,7 +193,7 @@ export const SpeciesGrid = React.memo(({ speciesVal, title, opacity, gradient, c
                 (displayMethod === EDisplayTypes.GRID || displayMethod === EDisplayTypes.MIX)
                 : true,
         })
-    ), [style, source, config])
+    ), [style, source, config]);
 
 
     useEffect(() => {
@@ -179,7 +215,7 @@ export const SpeciesGrid = React.memo(({ speciesVal, title, opacity, gradient, c
                 />
             )
         }
-    }
+    };
 
     return (
         <>

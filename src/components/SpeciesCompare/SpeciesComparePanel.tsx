@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux"
 import Select from 'react-select';
-import { StatisticsItem } from "../StatisticsItem"
-import { IGridsCompare, getGridCompareLayers, getLayers, setCompareGridLayers } from "../../redux"
 import { useEffect, useState } from "react";
+import { IGridsCompare, getGridCompareLayers, getLayers, setCompareGridLayers } from "../../redux"
+import { StatisticsItem } from "../StatisticsItem"
 import styles from "./SpeciesComparePanel.module.scss";
 
 type TOption = {
@@ -14,12 +14,10 @@ export const SpeciesComparePanel = () => {
     const layers = useSelector(getLayers);
     const compareLayers = useSelector(getGridCompareLayers);
     const dispatch = useDispatch();
-
     const [options, setOptions] = useState<TOption[]>([]);
 
     useEffect(() => {
         if (layers.length) {
-
             const options = layers.map((lyr) => {
                 return (
                     {
@@ -30,7 +28,7 @@ export const SpeciesComparePanel = () => {
             });
             setOptions(options);
         }
-    }, [layers])
+    }, [layers]);
 
     const onLayerChange = (selected: any, param: keyof IGridsCompare) => {
         dispatch(setCompareGridLayers({ [param]: selected.value }));

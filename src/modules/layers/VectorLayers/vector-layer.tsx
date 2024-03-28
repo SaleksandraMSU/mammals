@@ -1,11 +1,11 @@
 import React from "react";
+import { useSelector } from 'react-redux';
 import { Feature } from 'ol';
 import VectorSource from 'ol/source/Vector.js'
 import WebGLPointsLayer from 'ol/layer/WebGLPoints';
 import { Point } from 'ol/geom';
 import { useEffect, useMemo } from 'react';
-import { useMapContext } from "../../map/map-context"
-import { useSelector } from 'react-redux';
+import { useMapContext } from "../../map"
 import {
     EDisplayTypes,
     getDefaultLayer,
@@ -16,9 +16,6 @@ import {
     getPointsConfig,
     getZoomConfig,
 } from '../../../redux';
-import VectorTile from 'ol/layer/VectorTile.js';
-import VectorTileSource from 'ol/source/VectorTile.js';
-import WebGLVectorTileLayerRenderer from 'ol/renderer/webgl/VectorTileLayer.js';
 
 type TVectroLayerProps = {
     features: Feature<Point>[];
@@ -84,23 +81,6 @@ export const VectorLayer = React.memo(({ features }: TVectroLayerProps) => {
             isReliable ? ['==', ['get', 'quality', 'number'], 3] : true,
         ],
     };
-
-    class WebGLVectorTileLayer extends VectorTile {
-        createRenderer(): any {
-            return new WebGLVectorTileLayerRenderer(this, {
-                disableHitDetection: false,
-                style: style,
-            });
-        }
-    }
-
-    // const source = new VectorTileSource({
-    //     format: new MVT(),
-    //     projection: map.getView().getProjection(),
-    //     url:
-    //         'http://localhost:8080/geoserver/gwc/service/tms/1.0.0/mammals:rmm@EPSG:900913@pbf/{z}/{x}/{-y}.pbf'
-    // });
-
 
     const source = useMemo(() =>
         new VectorSource<Feature<Point>>({

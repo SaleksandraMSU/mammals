@@ -1,17 +1,16 @@
-import { useDispatch, useSelector } from "react-redux";
-import styles from "./Toc-layers.module.scss";
+import { useSelector } from "react-redux";
 import { EDisplayTypes, getDefaultLayer, getDisplayMethod, getLayers } from "../../redux";
+import { RadioButtons } from "../RadioButtons";
 import { TocItem } from "./toc-item";
-import { RadioButtons } from "../RadioButtons/RadioButtons";
+import styles from "./Toc-layers.module.scss";
 
 export const TocLayers = () => {
-
     const layers = useSelector(getLayers);
     const defaultLayer = useSelector(getDefaultLayer);
     const displayMethod = useSelector(getDisplayMethod);
 
-    const isButonsNotRender = [EDisplayTypes.POINTS, EDisplayTypes.HEATMAP].includes(displayMethod as EDisplayTypes) ||
-        layers.length < 2
+    const isButonsNotRender = [EDisplayTypes.POINTS, EDisplayTypes.HEATMAP]
+        .includes(displayMethod) || layers.length < 2;
 
     return (
         <div>
@@ -22,10 +21,10 @@ export const TocLayers = () => {
                     key={defaultLayer.title}
                     value={9999}
                     title={defaultLayer.title}
-                    opacity={defaultLayer.opacity} 
+                    opacity={defaultLayer.opacity}
                     color={defaultLayer.color}
                     gradient={defaultLayer.gradient}
-                    />
+                />
                 :
                 layers.map((lyr) =>
                     <TocItem

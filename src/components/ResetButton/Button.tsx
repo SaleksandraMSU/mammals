@@ -1,4 +1,4 @@
-import { batch, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { resetFilters, setLayers } from "../../redux";
 import styles from "./Button.module.scss";
 
