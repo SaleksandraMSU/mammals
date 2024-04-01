@@ -45,11 +45,11 @@ export const StatisticsPanel = () => {
     useEffect(() => {
         if (layers.length > 0) {
             layers.forEach((l) => {
-                const stats = l.cellsStats.map((cell) => cell.properties!.density as number);
+                const stats = l.gridCells.map((cell) => cell.properties!.density as number);
                 statistics.push(...stats)
             });
         } else {
-            const stats = defaultLayer.cellsStats.map((cell) => cell.properties!.density as number);
+            const stats = defaultLayer.gridCells.map((cell) => cell.properties!.density as number);
             statistics = stats;
         };
 
@@ -91,7 +91,7 @@ export const StatisticsPanel = () => {
 
     const { mean, max, min, median } = vars;
     const items = isNoFilters ? DEFAULT_ITEMS : getItems(count, mean, median, max, min);
-    const isRenderCellsStats = isDisplayChange ?
+    const isRendergridCells = isDisplayChange ?
         [EDisplayTypes.GRID, EDisplayTypes.MIX].includes(displayMethod)
         :
         true;
@@ -105,7 +105,7 @@ export const StatisticsPanel = () => {
                         <div>{items[0].value}</div>
                     </React.Fragment>
                 </div>
-                {isRenderCellsStats &&
+                {isRendergridCells &&
                     <>
                         <div>По ячейкам</div>
                         <div className={styles.grid}>

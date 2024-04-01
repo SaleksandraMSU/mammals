@@ -43,8 +43,8 @@ export const VectorLayer = React.memo(({ features }: TVectroLayerProps) => {
                 "interpolate",
                 ["exponential", 2],
                 ["zoom"],
-                3, 1.2,
-                5, 2,
+                3, 2,
+                5, 3,
                 10, 4,
                 15, 8
             ] : config.pointRadius,
@@ -86,7 +86,6 @@ export const VectorLayer = React.memo(({ features }: TVectroLayerProps) => {
         new VectorSource<Feature<Point>>({
             features: features
         }), [features]);
-
 
     const layer = useMemo(() =>
         new WebGLPointsLayer({

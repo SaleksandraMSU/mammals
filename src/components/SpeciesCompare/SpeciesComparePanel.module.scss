@@ -3,4 +3,12 @@
     flex-direction: column;
     gap: 0.5rem;
     padding: 15px 10px;
+
+    .grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        column-gap: 0.8rem;
+        row-gap: 4px;
+        align-items: center;
+    }
 }

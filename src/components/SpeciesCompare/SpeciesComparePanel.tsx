@@ -1,54 +1,36 @@
-import { useDispatch, useSelector } from "react-redux"
-import Select from 'react-select';
-import { useEffect, useState } from "react";
-import { IGridsCompare, getGridCompareLayers, getLayers, setCompareGridLayers } from "../../redux"
+import { useSelector } from "react-redux"
+import React from "react";
+import { getIntersectingGridFeatsStats, getLayers } from "../../redux"
 import { StatisticsItem } from "../StatisticsItem"
 import styles from "./SpeciesComparePanel.module.scss";
 
-type TOption = {
-    value: number,
-    label: string,
-}
+const message = "Добавьте на карту минимум 2 вида для подсчета статистики";
 
 export const SpeciesComparePanel = () => {
     const layers = useSelector(getLayers);
-    const compareLayers = useSelector(getGridCompareLayers);
-    const dispatch = useDispatch();
-    const [options, setOptions] = useState<TOption[]>([]);
-
-    useEffect(() => {
-        if (layers.length) {
-            const options = layers.map((lyr) => {
-                return (
-                    {
-                        value: lyr.value!,
-                        label: lyr.title,
-                    }
-                )
-            });
-            setOptions(options);
-        }
-    }, [layers]);
-
-    const onLayerChange = (selected: any, param: keyof IGridsCompare) => {
-        dispatch(setCompareGridLayers({ [param]: selected.value }));
-    };
+    const { area, count } = useSelector(getIntersectingGridFeatsStats);
+    const cellsCount = layers.map((l) => l.gridCells.length);
+    const overallCellsSum = cellsCount.reduce((acc, current) => acc + current, 0);
+    const percentage = count ? ((count / overallCellsSum) * 100).toFixed(1) : 0;
+    const areaKm = (Number(area) / 1000000).toFixed(1);
 
     return (
         <StatisticsItem title="Распространение видов">
             <div className={styles.wrapper}>
-                <Select
-                    options={options.filter((opt) => opt.value !== compareLayers.layer2)}
-                    value={options.find(option => option.value === compareLayers.layer1)}
-                    onChange={(selected) => onLayerChange(selected, "layer1")}
-                    isClearable
-                />
-                <Select
-                    options={options.filter((opt) => opt.value !== compareLayers.layer1)}
-                    value={options.find(option => option.value === compareLayers.layer2)}
-                    onChange={(selected) => onLayerChange(selected, "layer2")}
-                    isClearable
-                />
+                {layers.length < 2 ?
+                    <div>{message}</div>
+                    :
+                    <div className={styles.grid}>
+                        <React.Fragment>
+                            <div>Процент пересекающихся ячеек</div>
+                            <div>{percentage}%</div>
+                        </React.Fragment>
+                        <React.Fragment>
+                            <div>Общая площадь пересекающихся ячеек (км2)</div>
+                            <div>{areaKm}</div>
+                        </React.Fragment>
+                    </div>
+                }
             </div>
         </StatisticsItem>
     )

@@ -39,7 +39,7 @@ export const PopupControl = () => {
         overlay.setPosition(coordinate);
       });
     });
-  }, []);
+  }, [map]);
 
   return (
     <div>

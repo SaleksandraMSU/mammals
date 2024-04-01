@@ -30,35 +30,32 @@ export const LayersCollection = () => {
         isReliable
     } = useSelector(getFiltersState);
     const projection = useSelector(getMapProjection);
-    const ref = useRef<string>(projection)
+    const ref = useRef<string>(projection);
 
     const isCustomGridsNotRender = isDisplayChange &&
         NON_GRID_DISPLAY_TYPES.includes(displayMethod);
 
     useEffect(() => {
+        ref.current = projection;
         getGeoserverFeatures("rmm", projection)
             .then((feats) =>
                 setData(feats as Feature<Point>[]));
-        ref.current = projection;
     }, []);
 
 
     useEffect(() => {
-        const dataProjected = data.map((point) => {
-            const reprojected = reprojectPoint(point, ref.current, projection)
-            return reprojected;
-        });
-        const featuresProjected = features.map((point) => {
-            const reprojected = reprojectPoint(point, ref.current, projection)
-            return reprojected;
-        });
-        setData(dataProjected);
-        setFeatures(featuresProjected);
-        ref.current = projection;
-    }, [projection]);
+        if (data.length && ref.current !== projection) {
+            const dataProjected = data.map((point) => {
+                const reprojected = reprojectPoint(point, ref.current, projection);
+                return reprojected;
+            });
+            setData(dataProjected);
+            ref.current = projection;
+        }
+    }, [projection, data.length]);
 
     useEffect(() => {
-        if (data) {
+        if (data.length) {
             const filtered = data.filter((f) => {
                 return (
                     (museum.length > 0 ? museum.includes(f.get('genesis_da')) : true) &&

@@ -1,5 +1,13 @@
 import { createAction } from "@reduxjs/toolkit";
-import { IGridConfig, IGridsCompare, IHeatmapConfig, ILayerConfrig, IPointConfig, IZoomConfig, TLayerUpdatePayload } from "./types";
+import { 
+    IGridConfig, 
+    IIntersectingFeats, 
+    IHeatmapConfig, 
+    ILayerConfrig, 
+    IPointConfig, 
+    IZoomConfig, 
+    TLayerUpdatePayload 
+} from "./types";
 import { EMapProjections } from "./constants";
 
 export const setFilters = createAction("setFilters", (value) => ({ payload: value }));
@@ -22,6 +30,6 @@ export const updatePointConfig = createAction<Partial<IPointConfig>>("updatePoin
 export const setZoomParams = createAction<Partial<IZoomConfig>>("setZoomParams");
 export const setStatistics = createAction<number[]>("setStatistics");
 
-export const setCompareGridLayers = createAction<Partial<IGridsCompare>>("setCompareGridLayers");
+export const setIntersectingGridFeatures = createAction<Partial<IIntersectingFeats>>("setIntersectingGridFeatures");
 
 export const setProjection = createAction<EMapProjections>("setProjection");

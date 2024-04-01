@@ -39,25 +39,71 @@ const splitLinesByPoints = (
 
     const bottomLineLength = turf.length(bottomLine, units);
     const leftLineLength = turf.length(leftLine, units);
-    
-    const bottomLineCoordsUncorr = densities.slice(1).map((count, index) => {
+    const densititiesMod = densities.slice(1);
+
+    const bottomLineCoordsUncorr = densititiesMod.map((count, index) => {
         let proportion = count / sum;
-        if (proportion < 0.2) { proportion = 0.2 + 0.1*index}
+        if (proportion < 0.2) { proportion = 0.2 + 0.1 * index }
         const length = proportion * bottomLineLength;
-        const point = turf.along(bottomLine, length, units)
+        const point = turf.along(bottomLine, length, units);
         return point.geometry.coordinates;
     })
     const bottomLineCoords = [coordinates[3], ...bottomLineCoordsUncorr];
 
-    const leftLineCoordsUncorr = densities.slice(1).map((count, index) => {
+    const leftLineCoordsUncorr = densititiesMod.map((count, index) => {
         let proportion = count / sum;
-        if (proportion < 0.2) { proportion = 0.2 + 0.1*index }
+        if (proportion < 0.2) { proportion = 0.2 + 0.1 * index }
         const length = proportion * leftLineLength;
-        const point = turf.along(leftLine, length, units)
+        const point = turf.along(leftLine, length, units);
         return point.geometry.coordinates;
     })
     const leftLineCoords = [coordinates[1], ...leftLineCoordsUncorr];
     return { bottomLineCoords, leftLineCoords };
+};
+
+const splitTringleInParts = (
+    coordinates: Coordinate[],
+    centroid: Coordinate,
+    densities: number[],
+    sum: number,
+) => {
+    const firstMedian = turf.lineString([centroid, coordinates[0]]);
+    const secondMedian = turf.lineString([centroid, coordinates[1]]);
+    const thirdMedian = turf.lineString([centroid, coordinates[2]]);
+
+    const firstMedianLength = turf.length(firstMedian, units);
+    const secondMedianLength = turf.length(secondMedian, units);
+    const thirdMedianLength = turf.length(thirdMedian, units);
+    const densititiesMod = densities.slice(1);
+
+    const firstMedianCoordsUncorr = densititiesMod.map((count, index) => {
+        let proportion = count / sum;
+        if (proportion < 0.2) { proportion = 0.2 + 0.1 * index }
+        const length = proportion * firstMedianLength;
+        const point = turf.along(firstMedian, length, units);
+        return point.geometry.coordinates;
+    })
+    const firstMedianCoords = [coordinates[0], ...firstMedianCoordsUncorr];
+
+    const secondMedianCoordsUncorr = densititiesMod.map((count, index) => {
+        let proportion = count / sum;
+        if (proportion < 0.2) { proportion = 0.2 + 0.1 * index }
+        const length = proportion * secondMedianLength;
+        const point = turf.along(secondMedian, length, units);
+        return point.geometry.coordinates;
+    })
+    const secondMedianCoords = [coordinates[1], ...secondMedianCoordsUncorr];
+
+    const thirdMedianCoordsUncorr = densititiesMod.map((count, index) => {
+        let proportion = count / sum;
+        if (proportion < 0.2) { proportion = 0.2 + 0.1 * index }
+        const length = proportion * thirdMedianLength;
+        const point = turf.along(thirdMedian, length, units);
+        return point.geometry.coordinates;
+    })
+    const thirdMedianCoords = [coordinates[2], ...thirdMedianCoordsUncorr];
+
+    return { firstMedianCoords, secondMedianCoords, thirdMedianCoords };
 };
 
 const splitHexInParts = (
@@ -137,6 +183,22 @@ export const splitGridCell = (
                 const thirdSector = parts.slice(secondSectorEnd, thirdSectorEnd);
                 const fourthSector = parts.slice(thirdSectorEnd);
                 sectors = [firstSector, secondSector, thirdSector, fourthSector];
+            };
+            break;
+        case EGridTypes.TRIANGLE:
+            const {
+                firstMedianCoords,
+                secondMedianCoords,
+                thirdMedianCoords,
+            } = splitTringleInParts(coordinates, centroid, densities, sum);
+            for (let i = 0; i < species.length; i++) {
+                const sector = turf.polygon([[
+                    firstMedianCoords[i],
+                    secondMedianCoords[i],
+                    thirdMedianCoords[i],
+                    firstMedianCoords[i]
+                ]]);
+                sectors.push([sector]);
             };
             break;
     }

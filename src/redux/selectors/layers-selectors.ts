@@ -54,7 +54,7 @@ export const getZoomConfig = createSelector(
     (state) => state.zoom
 );
 
-export const getGridCompareLayers = createSelector(
+export const getIntersectingGridFeatsStats = createSelector(
     getLayersState,
-    (state) => state.gridsCompare
+    (state) => state.intersectingFeats ?? {}
 );

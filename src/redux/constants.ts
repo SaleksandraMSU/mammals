@@ -40,11 +40,11 @@ export const DEFAULT_LAYER: ILayerConfrig = {
     opacity: 1,
     color: "#FF8000",
     gradient: DEFAULT_GRADIENT,
-    cellsStats: [],
+    gridCells: [],
 };
 
 export const DEFAULT_GRID: IGridConfig = {
-    type: EGridTypes.SQUARE,
+    type: EGridTypes.TRIANGLE,
     cellSize: 150,
     method: EGridsRenderMethods.QUANTITY,
 };

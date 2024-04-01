@@ -32,7 +32,7 @@ export const FilterSelect = ({ options, title, value }: TSelectProps) => {
                     opacity: 1,
                     color: getRandomColor(),
                     gradient: GRADIENT_ITEMS[index].value,
-                    cellsStats: [],
+                    gridCells: [],
                 }
             ))))
         }

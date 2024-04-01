@@ -56,7 +56,7 @@ export const basemaps = [
         key: EBasemaps.SATELLITE,
         url: 'https://core-sat.maps.yandex.net/tiles?l=sat&x={x}&y={y}&z={z}',
         attributions: "© Яндекс <a target='_blank' href='https://yandex.ru/legal/maps_termsofuse/?lang=ru'>Условия использования</a>",
-        proj: "EPSG:3395",
+        proj: undefined,
     },
     {
         key: EBasemaps.TOPOMAPS,

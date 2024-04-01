@@ -86,7 +86,7 @@ export const SpeciesGrid = React.memo((
                     const pointsWithin = turf.pointsWithinPolygon(collection, cell).features as geoJsonPoint[]
                     count = pointsWithin.length;
                     // for statistics calculation
-                    if (count > 0) {
+                    if (count > 0 && (displayMethod !== EDisplayTypes.MIX || count > 1)) {
                         cellsWithData.push({ ...cell, properties: { density: count, species: speciesVal } });
                     }
                     // for mix display
@@ -114,17 +114,17 @@ export const SpeciesGrid = React.memo((
                     geometry:
                         new Polygon(cell!.geometry.coordinates)
                             .transform("EPSG:4326", projection),
-                    Count: cell!.properties!.density
+                    Count: cell!.properties.density
                 });
             });
         if (speciesVal) {
             dispatch(updateSpeciesLayer({
                 title: title!,
-                prop: 'cellsStats',
+                prop: 'gridCells',
                 value: cellsWithData
             }));
         } else {
-            dispatch(updateDefaultLayer({ 'cellsStats': cellsWithData }));
+            dispatch(updateDefaultLayer({ 'gridCells': cellsWithData }));
         }
         setGridFeats(gridFeatures);
         setFeaturesOutOfCells(pointFeatures);
@@ -168,20 +168,17 @@ export const SpeciesGrid = React.memo((
 
     useEffect(() => {
         if (overlapFeatures.length) {
-            const featsToKeep = gridFeats.filter((cell) => {
+            const featsToRemove = gridFeats.filter((cell) => {
                 const geometry = cell.getGeometry();
                 if (!geometry) return false;
                 const reprojectedCell = geometry.clone().transform(projection, "EPSG:4326");
                 const geoJsonCell = turf.polygon(reprojectedCell.getCoordinates());
-                const cond = overlapFeatures.some((feat) =>
+                const isIntersects = overlapFeatures.some((feat) =>
                     turf.booleanContains(geoJsonCell, feat)
                 );
-                return !cond;
+                return isIntersects;
             });
-
-            if (featsToKeep.length !== gridFeats.length) {
-                setGridFeats(featsToKeep);
-            }
+            source.removeFeatures(featsToRemove);
         }
     }, [overlapFeatures, projection]);
 

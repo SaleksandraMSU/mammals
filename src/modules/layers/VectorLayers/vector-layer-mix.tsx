@@ -29,7 +29,8 @@ export const VectorLayerMix = React.memo((
                 "interpolate",
                 ["exponential", 2],
                 ["zoom"],
-                5, 1,
+                3, 2,
+                5, 3,
                 10, 4,
                 15, 8
             ] : config.pointRadius,

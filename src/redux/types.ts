@@ -29,7 +29,7 @@ export interface ILayerConfrig {
     opacity: number,
     color: string,
     gradient: IGradientConfig,
-    cellsStats: Feature<Polygon, GeoJsonProperties>[],
+    gridCells: Feature<Polygon, GeoJsonProperties>[],
 };
 
 export interface IGridConfig {
@@ -54,10 +54,8 @@ export interface IZoomConfig {
     toLayer: number | null,
 };
 
-export interface IGridsCompare {
-    layer1: number | null,
-    layer2: number | null,
-    percentage?: number,
+export interface IIntersectingFeats {
+    count?: number,
     area?: number,
 };
 
@@ -71,7 +69,7 @@ export interface ILayersState {
     points: IPointConfig,
     grid: IGridConfig,
     heatmap: IHeatmapConfig,
-    gridsCompare: IGridsCompare,
+    intersectingFeats?: IIntersectingFeats,
 };
 
 export type TLayerUpdatePayload = {

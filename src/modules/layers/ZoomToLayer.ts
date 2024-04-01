@@ -14,7 +14,7 @@ export const ZoomToLayer = () => {
     const projection = useSelector(getMapProjection);
 
     useEffect(() => {
-        if (zoom.toLayer && features) {
+        if (zoom.toLayer && features.length) {
             const all_feats = zoom.toLayer === 9999;
             const filtered = features.filter((f) =>
                 !all_feats ? f.get('species') === zoom.toLayer : true);
@@ -24,12 +24,16 @@ export const ZoomToLayer = () => {
             });
             const extent = turf.bbox(collection);
 
-            map.getView().fit(extent, {
-                maxZoom: 10,
-                padding: [30, 30, 30, 30],
-                duration: 1000,
-            });
-
+            try {
+                map.getView().fit(extent, {
+                    maxZoom: 10,
+                    padding: [30, 30, 30, 30],
+                    duration: 1000,
+                })
+            }
+            catch (e) {
+                console.log(e)
+            }
             dispatch(setZoomParams({ toLayer: null }));
         }
     }), [zoom.toLayer, features];

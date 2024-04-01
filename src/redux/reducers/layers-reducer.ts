@@ -19,7 +19,7 @@ import {
     updateHeatmapConfig,
     updatePointConfig,
     setZoomParams,
-    setCompareGridLayers,
+    setIntersectingGridFeatures,
 } from "../actions";
 
 const initialState: ILayersState = {
@@ -32,7 +32,6 @@ const initialState: ILayersState = {
     grid: DEFAULT_GRID,
     heatmap: DEFAULT_HEATMAP,
     points: DEFAULT_POINTS,
-    gridsCompare: { layer1: null, layer2: null },
 }
 
 export const LayersReducer = createReducer(initialState, (builder) => {
@@ -103,10 +102,10 @@ export const LayersReducer = createReducer(initialState, (builder) => {
                 ...action.payload
             }
         }))
-        .addCase(setCompareGridLayers, (state, action) => ({
+        .addCase(setIntersectingGridFeatures, (state, action) => ({
             ...state,
-            gridsCompare: {
-                ...state.gridsCompare,
+            intersectingFeats: {
+                ...state.intersectingFeats,
                 ...action.payload
             }
         }))
