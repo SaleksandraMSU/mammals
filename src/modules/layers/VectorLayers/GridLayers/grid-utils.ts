@@ -29,81 +29,23 @@ const getMiddleCoords = (
     return [lon, lat];
 };
 
-const splitLinesByPoints = (
-    coordinates: Coordinate[],
+const getLineCoordinates = (
+    startCoords: Coordinate,
+    endCoords: Coordinate,
     densities: number[],
     sum: number,
 ) => {
-    const bottomLine = turf.lineString([coordinates[0], coordinates[3]]);
-    const leftLine = turf.lineString([coordinates[0], coordinates[1]]);
-
-    const bottomLineLength = turf.length(bottomLine, units);
-    const leftLineLength = turf.length(leftLine, units);
-    const densititiesMod = densities.slice(1);
-
-    const bottomLineCoordsUncorr = densititiesMod.map((count, index) => {
+    const line = turf.lineString([startCoords, endCoords]);
+    const lineLength = turf.length(line, units);
+    const lineCoordsSliced = densities.slice(1).map((count, index) => {
         let proportion = count / sum;
         if (proportion < 0.2) { proportion = 0.2 + 0.1 * index }
-        const length = proportion * bottomLineLength;
-        const point = turf.along(bottomLine, length, units);
+        const length = proportion * lineLength;
+        const point = turf.along(line, length, units);
         return point.geometry.coordinates;
     })
-    const bottomLineCoords = [coordinates[3], ...bottomLineCoordsUncorr];
-
-    const leftLineCoordsUncorr = densititiesMod.map((count, index) => {
-        let proportion = count / sum;
-        if (proportion < 0.2) { proportion = 0.2 + 0.1 * index }
-        const length = proportion * leftLineLength;
-        const point = turf.along(leftLine, length, units);
-        return point.geometry.coordinates;
-    })
-    const leftLineCoords = [coordinates[1], ...leftLineCoordsUncorr];
-    return { bottomLineCoords, leftLineCoords };
-};
-
-const splitTringleInParts = (
-    coordinates: Coordinate[],
-    centroid: Coordinate,
-    densities: number[],
-    sum: number,
-) => {
-    const firstMedian = turf.lineString([centroid, coordinates[0]]);
-    const secondMedian = turf.lineString([centroid, coordinates[1]]);
-    const thirdMedian = turf.lineString([centroid, coordinates[2]]);
-
-    const firstMedianLength = turf.length(firstMedian, units);
-    const secondMedianLength = turf.length(secondMedian, units);
-    const thirdMedianLength = turf.length(thirdMedian, units);
-    const densititiesMod = densities.slice(1);
-
-    const firstMedianCoordsUncorr = densititiesMod.map((count, index) => {
-        let proportion = count / sum;
-        if (proportion < 0.2) { proportion = 0.2 + 0.1 * index }
-        const length = proportion * firstMedianLength;
-        const point = turf.along(firstMedian, length, units);
-        return point.geometry.coordinates;
-    })
-    const firstMedianCoords = [coordinates[0], ...firstMedianCoordsUncorr];
-
-    const secondMedianCoordsUncorr = densititiesMod.map((count, index) => {
-        let proportion = count / sum;
-        if (proportion < 0.2) { proportion = 0.2 + 0.1 * index }
-        const length = proportion * secondMedianLength;
-        const point = turf.along(secondMedian, length, units);
-        return point.geometry.coordinates;
-    })
-    const secondMedianCoords = [coordinates[1], ...secondMedianCoordsUncorr];
-
-    const thirdMedianCoordsUncorr = densititiesMod.map((count, index) => {
-        let proportion = count / sum;
-        if (proportion < 0.2) { proportion = 0.2 + 0.1 * index }
-        const length = proportion * thirdMedianLength;
-        const point = turf.along(thirdMedian, length, units);
-        return point.geometry.coordinates;
-    })
-    const thirdMedianCoords = [coordinates[2], ...thirdMedianCoordsUncorr];
-
-    return { firstMedianCoords, secondMedianCoords, thirdMedianCoords };
+    const lineCoords = [endCoords, ...lineCoordsSliced];
+    return lineCoords;
 };
 
 const splitHexInParts = (
@@ -139,7 +81,6 @@ const splitHexInParts = (
     return { parts, polygonsNumbers };
 };
 
-
 export const splitGridCell = (
     type: EGridTypes,
     coordinates: Coordinate[],
@@ -152,13 +93,16 @@ export const splitGridCell = (
     let sectors: geoJsonPolygon[][] = [];
     switch (type) {
         case EGridTypes.SQUARE:
-            const { leftLineCoords, bottomLineCoords } = splitLinesByPoints(coordinates, densities, sum)
+            const endCoordinates = [coordinates[1], coordinates[3]];
+            const linesCoords = endCoordinates.map(
+                coordinate => getLineCoordinates(coordinates[0], coordinate, densities, sum)
+            );
             for (let i = 0; i < species.length; i++) {
                 const sector = turf.polygon([[
                     coordinates[0],
-                    leftLineCoords[i],
-                    getMiddleCoords(leftLineCoords[i], bottomLineCoords[i]),
-                    bottomLineCoords[i],
+                    linesCoords[0][i],
+                    getMiddleCoords(linesCoords[0][i], linesCoords[1][i]),
+                    linesCoords[1][i],
                     coordinates[0]
                 ]]);
                 sectors.push([sector]);
@@ -186,17 +130,16 @@ export const splitGridCell = (
             };
             break;
         case EGridTypes.TRIANGLE:
-            const {
-                firstMedianCoords,
-                secondMedianCoords,
-                thirdMedianCoords,
-            } = splitTringleInParts(coordinates, centroid, densities, sum);
+            const endCoords = [coordinates[0], coordinates[1], coordinates[2]];
+            const medianCoords = endCoords.map(
+                coordinate => getLineCoordinates(centroid, coordinate, densities, sum)
+            );
             for (let i = 0; i < species.length; i++) {
                 const sector = turf.polygon([[
-                    firstMedianCoords[i],
-                    secondMedianCoords[i],
-                    thirdMedianCoords[i],
-                    firstMedianCoords[i]
+                    medianCoords[0][i],
+                    medianCoords[1][i],
+                    medianCoords[2][i],
+                    medianCoords[0][i]
                 ]]);
                 sectors.push([sector]);
             };
