@@ -87,6 +87,7 @@ export const GradientPicker = ({ title, gradient }: TGradientPickerProps) => {
                     value={GRADIENT_ITEMS.find(option => JSON.stringify(option.value) === JSON.stringify(gradient))}
                     onChange={(selected) => onGradientChange(selected)}
                     components={{ Option: CustomOption, Control: CustomControl }}
+                    blurInputOnSelect
                     styles={{
                         valueContainer: (baseStyles) => ({
                             ...baseStyles,

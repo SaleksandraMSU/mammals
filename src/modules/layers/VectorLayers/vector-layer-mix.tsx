@@ -50,7 +50,7 @@ export const VectorLayerMix = React.memo((
         new WebGLPointsLayer({
             source: source,
             style: style,
-            zIndex: 2,
+            zIndex: 50,
             visible: displayMethod === EDisplayTypes.MIX,
         }
         ), [source, style, displayMethod]);

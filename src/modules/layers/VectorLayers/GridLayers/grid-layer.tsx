@@ -9,8 +9,10 @@ import {
     EDisplayTypes,
     getDefaultLayer,
     getDisplayMethod,
+    getIsDisplayMethodChange,
     getLayers,
-    getMapProjection
+    getMapProjection,
+    getZoomConfig
 } from '../../../../redux';
 import { getGeoserverFeatures } from "../../../../service";
 import { useMapContext } from '../../../map';
@@ -21,10 +23,12 @@ export const GridLayer = React.memo(() => {
     const { map } = useMapContext();
     const { opacity, gradient, color } = useSelector(getDefaultLayer);
     const layers = useSelector(getLayers);
+    const isDisplayChangeActive = useSelector(getIsDisplayMethodChange);
     const displayMethod = useSelector(getDisplayMethod);
     const [gridFeatures, setGridFeatures] = useState<Feature<Polygon>[]>([]);
     const [points, setPoints] = useState<Feature<Point>[]>([]);
     const projection = useSelector(getMapProjection);
+    const zoom = useSelector(getZoomConfig);
     const ref = useRef<string>(projection);
 
     useEffect(() => {
@@ -97,11 +101,12 @@ export const GridLayer = React.memo(() => {
 
     useEffect(() => {
         map.addLayer(grid);
+        !isDisplayChangeActive && grid.setMaxZoom(zoom.change);
 
         return () => {
             map.removeLayer(grid);
         }
-    }, [map, grid]);
+    }, [map, grid, isDisplayChangeActive, zoom.change]);
 
     const renderPointsLayer = () => {
         if (displayMethod === EDisplayTypes.MIX) {

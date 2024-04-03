@@ -19,6 +19,7 @@ export const ProjectionSelect = () => {
                 options={PROJECTIONS}
                 value={PROJECTIONS.find(option => option.value === mapProjection)}
                 onChange={(selected) => onProjectionChange(selected)}
+                blurInputOnSelect
                 styles={{
                     control: (baseStyles) => ({
                         ...baseStyles,

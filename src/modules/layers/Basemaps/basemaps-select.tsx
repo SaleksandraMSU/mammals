@@ -51,6 +51,7 @@ export const BasemapsSelect = () => {
                 value={basemapsItems.find(option => option.value === activeBasemap)}
                 onChange={(selected) => onBasemapChange(selected)}
                 components={{ Option: CustomOption, Control: CustomControl }}
+                blurInputOnSelect
                 styles={{
                     control: (baseStyles) => ({
                         ...baseStyles,

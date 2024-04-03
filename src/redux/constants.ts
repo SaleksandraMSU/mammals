@@ -44,7 +44,7 @@ export const DEFAULT_LAYER: ILayerConfrig = {
 };
 
 export const DEFAULT_GRID: IGridConfig = {
-    type: EGridTypes.TRIANGLE,
+    type: EGridTypes.SQUARE,
     cellSize: 150,
     method: EGridsRenderMethods.QUANTITY,
 };
