@@ -59,8 +59,8 @@ export const VectorLayer = React.memo(({ features }: TVectroLayerProps) => {
                 layers[3] ? layers[3].color : "#FF8000",
                 "#FF8000"
             ] : defaultLayer.color,
-        "circle-stroke-color": "black",
-        "circle-stroke-width": 0,
+        "circle-stroke-color": ['match', ['get', 'quality', 'number'], 3, "black", "red"],
+        "circle-stroke-width": ['match', ['get', 'quality', 'number'], 3, 0, 0.7],
         "circle-opacity": layers.length > 0 ?
             ['match', ['get', 'species', 'number'],
                 layers[0].value, layers[0].opacity,
@@ -91,6 +91,7 @@ export const VectorLayer = React.memo(({ features }: TVectroLayerProps) => {
         new WebGLPointsLayer({
             source: source,
             style: style,
+            zIndex: 1,
             visible: displayMethod === EDisplayTypes.POINTS,
         }
         ), [source, style, displayMethod]);

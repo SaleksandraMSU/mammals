@@ -185,7 +185,7 @@ export const SpeciesGrid = React.memo((
     const layer = useMemo(() => (
         new WebGLLayer({
             source: source,
-            zIndex: 1,
+            zIndex: 2,
             visible: isDisplayChangeActive ?
                 (displayMethod === EDisplayTypes.GRID || displayMethod === EDisplayTypes.MIX)
                 : true,

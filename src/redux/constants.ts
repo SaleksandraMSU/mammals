@@ -33,6 +33,11 @@ export enum EBasemaps {
     ESRI = "Esri",
 };
 
+export enum EData {
+    CITIES = "Cities",
+    OOPT = "Oopt",
+}
+
 export const DEFAULT_GRADIENT = { color1: "#f5f500", color2: "#f57a00", color3: "#f50000"};
 
 export const DEFAULT_LAYER: ILayerConfrig = {

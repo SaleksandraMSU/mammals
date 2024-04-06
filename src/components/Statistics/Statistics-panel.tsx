@@ -12,7 +12,7 @@ import {
     getLayers
 } from "../../redux";
 import { getFeaturesCount } from "../../service";
-import { StatisticsItem } from "../StatisticsItem";
+import { StatisticsItem } from "./StatisticsItem";
 import { DEFAULT_ITEMS } from "./statistics-constants";
 import { getMedian, createFilter, getItems } from "./statistics-utils";
 import styles from "./Statistics-panel.module.scss";

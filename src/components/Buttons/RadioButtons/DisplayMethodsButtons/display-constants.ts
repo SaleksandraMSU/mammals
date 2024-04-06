@@ -1,5 +1,5 @@
-import { EDisplayTypes } from "../../redux";
-import { GridIcon, HeatmapIcon, MixIcon, PointsIcon } from "../Icons";
+import { EDisplayTypes } from "../../../../redux";
+import { GridIcon, HeatmapIcon, MixIcon, PointsIcon } from "../../../Icons";
 
 export const displayMethods = [
     {

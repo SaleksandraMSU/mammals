@@ -94,7 +94,7 @@ export const GridLayer = React.memo(() => {
     const grid = useMemo(() => (
         new WebGLLayer({
             source: source,
-            zIndex: 1,
+            zIndex: 2,
             visible: !layers.length,
         })
     ), [style, source, layers.length])

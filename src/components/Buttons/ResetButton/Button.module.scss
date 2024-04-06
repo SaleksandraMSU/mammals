@@ -12,6 +12,7 @@
     letter-spacing: 0.73px;
     background-image: linear-gradient(135deg, #e76c00 0%, #b83452 73%, #a61f71 100%);
     color: #FFFFFF;
+    align-self: flex-start;
 
     &:hover {
         background-image: linear-gradient(165deg, #e76c00 0%, #b83452 73%, #a61f71 100%);

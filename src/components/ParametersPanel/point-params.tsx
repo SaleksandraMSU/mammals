@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getPointsConfig, updatePointConfig } from "../../redux";
 import { SingleSlider } from "../Slider";
+import { Toggle } from "../Toggle";
 import styles from "./ParamsPanel.module.scss";
 
 export const PointsParameters = () => {
@@ -11,34 +12,28 @@ export const PointsParameters = () => {
         dispatch(updatePointConfig({ "pointRadius": v }));
     };
 
+    const onAutoChange = () => {
+        dispatch(updatePointConfig({ auto: !config.auto }));
+    };
+
     return (
         <div className={styles.paramsWrapper}>
-            <div className={styles.wrapper}>
-                <span style={{ opacity: config.auto ? 0.5 : 1 }}>Радиус точек</span>
-                <input
-                    checked={!config.auto}
-                    onChange={() => dispatch(updatePointConfig({ auto: !config.auto }))}
-                    className={styles.checkbox}
-                    id={`react-switch-new-point`}
-                    type="checkbox"
-                />
-                <label
-                    style={{ background: config.auto ? 'lightgrey' : '#FF8000' }}
-                    className={styles.label}
-                    htmlFor={`react-switch-new-point`}
-                >
-                    <span className={styles.button} />
-                </label>
-            </div>
-            {!config.auto && <div style={{ width: 'auto' }}>
-                <SingleSlider
-                    min={1}
-                    max={20}
-                    step={1}
-                    value={config.pointRadius}
-                    onChange={onRadiusChange}
-                />
-            </div>}
+            <Toggle
+                isChecked={!config.auto}
+                onChange={onAutoChange}
+                label="Радиус точек"
+            />
+            {!config.auto &&
+                <div style={{ width: 'auto' }}>
+                    <SingleSlider
+                        min={1}
+                        max={20}
+                        step={1}
+                        value={config.pointRadius}
+                        onChange={onRadiusChange}
+                    />
+                </div>
+            }
         </div>
 
     )

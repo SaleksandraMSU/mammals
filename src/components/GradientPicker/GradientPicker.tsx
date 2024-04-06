@@ -1,16 +1,15 @@
-import { useDispatch } from "react-redux";
 import Select, { components, ControlProps, OptionProps } from 'react-select';
-import { IGradientConfig, updateDefaultLayer, updateSpeciesLayer } from "../../redux";
+import { IGradientConfig } from "../../redux";
 import styles from "./GradientPicker.module.scss";
 import { GRADIENT_ITEMS, TGradientItem } from "./gradient-picker-constants";
 
 type TGradientPickerProps = {
-    title: string,
     gradient: IGradientConfig,
+    onGradientColorChange: (param: keyof IGradientConfig, color: string) => void,
+    onGradientChange: (v: any) => void,
 };
 
-export const GradientPicker = ({ title, gradient }: TGradientPickerProps) => {
-    const dispatch = useDispatch();
+export const GradientPicker = ({ gradient, onGradientColorChange, onGradientChange }: TGradientPickerProps) => {
     const { color1, color2, color3 } = gradient;
     const colors = Object.keys(gradient) as (keyof IGradientConfig)[];
 
@@ -38,6 +37,9 @@ export const GradientPicker = ({ title, gradient }: TGradientPickerProps) => {
         { children, ...props }: ControlProps<TGradientItem>
     ) => {
         const { value } = props.selectProps;
+        if (!value) {
+            return;
+        }
         const val = (value as TGradientItem).value;
         const style = {
             marginLeft: "5px",
@@ -53,30 +55,6 @@ export const GradientPicker = ({ title, gradient }: TGradientPickerProps) => {
             </components.Control>
         );
     };
-
-    const onColorChange = (param: keyof IGradientConfig, color: string) => {
-        if (title === 'Все данные') {
-            dispatch(updateDefaultLayer({ "gradient": { ...gradient, [param]: color } }));
-        } else {
-            dispatch(updateSpeciesLayer({
-                title: title,
-                prop: 'gradient',
-                value: { ...gradient, [param]: color }
-            }));
-        };
-    };
-
-    const onGradientChange = (selected: any) => {
-        if (title === 'Все данные') {
-            dispatch(updateDefaultLayer({ "gradient": selected.value }));
-        } else {
-            dispatch(updateSpeciesLayer({
-                title: title,
-                prop: 'gradient',
-                value: selected.value
-            }));
-        };
-    }
 
     return (
         <div className={styles.wrapper}>
@@ -109,7 +87,8 @@ export const GradientPicker = ({ title, gradient }: TGradientPickerProps) => {
                                 key={color}
                                 type="color"
                                 value={gradient[color]}
-                                onChange={(e) => onColorChange(color, e.target.value)} />
+                                onChange={(e) => onGradientColorChange(color, e.target.value)}
+                            />
                         ))}
                     </div>
                 </div>

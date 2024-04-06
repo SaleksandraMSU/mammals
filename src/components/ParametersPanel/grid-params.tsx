@@ -1,10 +1,11 @@
+import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import Select from 'react-select';
 import { EGridTypes, getGridConfig, updateGridConfig } from "../../redux";
 import { SingleSlider } from "../Slider";
 import styles from "./ParamsPanel.module.scss";
 
-export const GridParameters = () => {
+export const GridParameters = React.memo(() => {
     const config = useSelector(getGridConfig);
     const dispatch = useDispatch();
 
@@ -30,23 +31,18 @@ export const GridParameters = () => {
                 options={options}
                 value={options.find(option => option.value === config.type)}
                 onChange={(selected) => onTypeChange(selected)}
-                styles={{
-                    control: (baseStyles) => ({
-                        ...baseStyles,
-                    }),
-                }}
             />
         </div>
         <div className={styles.wrapper}>
             <label>Размер ячейки (км)</label>
             <SingleSlider
-                min={25}
-                max={500}
-                step={25}
+                min={10}
+                max={200}
+                step={10}
                 value={config.cellSize}
                 onChange={onSizeChange}
             />
         </div>
         </>
     )
-}
+});

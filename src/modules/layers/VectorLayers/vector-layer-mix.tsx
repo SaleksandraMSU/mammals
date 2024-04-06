@@ -35,8 +35,8 @@ export const VectorLayerMix = React.memo((
                 15, 8
             ] : config.pointRadius,
         "circle-fill-color": color,
-        "circle-stroke-color": "black",
-        "circle-stroke-width": 0,
+        "circle-stroke-color": ['match', ['get', 'quality', 'number'], 3, "black", "red"],
+        "circle-stroke-width": ['match', ['get', 'quality', 'number'], 3, 0, 0.7],
         "circle-opacity": opacity,
     };
 

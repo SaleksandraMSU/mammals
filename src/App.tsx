@@ -1,19 +1,18 @@
 import {
-  Checkbox,
   Collapsible,
   Filters,
-  Toggle,
   TocLayers,
-  ResetButton,
   ParametersPanel,
   StatisticsPanel,
-  ZoomChange
+  SpeciesComparePanel,
+  ZoomChange,
+  DisplayRadioButtons
 } from './components';
 import { MapComponent, ProjectionSelect } from './modules/map';
 import { BasemapsSelect, LayersCollection } from './modules/layers';
 import { PopupControl } from './modules/popup/';
 import { Legend } from './modules/legend';
-import { SpeciesComparePanel } from './components/SpeciesCompare/SpeciesComparePanel';
+import { DataBase } from './modules/database/Database';
 import styles from "./App.module.scss";
 
 function App() {
@@ -26,12 +25,12 @@ function App() {
           <div className={styles.separator}></div>
           <div className={styles.separatorShadow}></div>
         </div>
-        <div style={{ fontSize: "36px", padding: "30px 0" }}>Карта млекопитающих</div>
+        <div className={styles.pageTitle}>Карта млекопитающих</div>
         <div className={styles.gridContainer}>
           <div className={styles.sidebar}>
-            <div style={{ fontSize: "18px", fontWeight: "600", margin: "20px 0 20px 40px" }}>Настройки карты</div>
+            <div className={styles.title} >Настройки карты</div>
             <Collapsible label='Визуализация' defaultActive>
-              <Toggle />
+              <DisplayRadioButtons />
               <ZoomChange />
               <ParametersPanel />
               <TocLayers />
@@ -40,8 +39,6 @@ function App() {
             </Collapsible>
             <Collapsible label='Фильтрация'>
               <Filters />
-              <Checkbox />
-              <ResetButton />
             </Collapsible>
             <Collapsible label='Статистика'>
               <StatisticsPanel />
@@ -53,6 +50,7 @@ function App() {
               <LayersCollection />
               <PopupControl />
               <Legend />
+              <DataBase />
             </MapComponent>
           </div>
         </div>

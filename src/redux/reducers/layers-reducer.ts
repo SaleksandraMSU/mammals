@@ -6,6 +6,7 @@ import {
     DEFAULT_LAYER,
     DEFAULT_POINTS,
     EBasemaps,
+    EData,
     EDisplayTypes
 } from "../constants";
 import {
@@ -20,6 +21,7 @@ import {
     updatePointConfig,
     setZoomParams,
     setIntersectingGridFeatures,
+    setDataLayers,
 } from "../actions";
 
 const initialState: ILayersState = {
@@ -27,6 +29,7 @@ const initialState: ILayersState = {
     showMethod: EDisplayTypes.POINTS,
     basemap: EBasemaps.YANDEX,
     layers: [],
+    dataLayers: { [EData.CITIES]: false, [EData.OOPT]: false },
     zoom: { change: 11, toLayer: null },
     defaultLayer: DEFAULT_LAYER,
     grid: DEFAULT_GRID,
@@ -41,6 +44,7 @@ export const LayersReducer = createReducer(initialState, (builder) => {
         })
         .addCase(toggleDisplayChange, (state) => {
             state.allowDisplayChange = !state.allowDisplayChange;
+            state.showMethod = initialState.showMethod;
         })
         .addCase(setActiveBasemap, (state, action) => {
             state.basemap = action.payload;
@@ -106,6 +110,13 @@ export const LayersReducer = createReducer(initialState, (builder) => {
             ...state,
             intersectingFeats: {
                 ...state.intersectingFeats,
+                ...action.payload
+            }
+        }))
+        .addCase(setDataLayers, (state, action) => ({
+            ...state,
+            dataLayers: {
+                ...state.dataLayers,
                 ...action.payload
             }
         }))

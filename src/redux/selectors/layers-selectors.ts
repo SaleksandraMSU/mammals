@@ -58,3 +58,8 @@ export const getIntersectingGridFeatsStats = createSelector(
     getLayersState,
     (state) => state.intersectingFeats ?? {}
 );
+
+export const getDataLayers = createSelector(
+    getLayersState,
+    (state) => state.dataLayers ?? {}
+)

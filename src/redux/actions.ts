@@ -6,19 +6,21 @@ import {
     ILayerConfrig, 
     IPointConfig, 
     IZoomConfig, 
-    TLayerUpdatePayload 
+    TLayerUpdatePayload, 
+    IDataLayer
 } from "./types";
-import { EMapProjections } from "./constants";
+import { EDisplayTypes, EMapProjections } from "./constants";
 
 export const setFilters = createAction("setFilters", (value) => ({ payload: value }));
 export const resetFilters = createAction("resetFilters");
 
-export const setDisplayMethod = createAction("setDisplayMethod", (value) => ({ payload: value }));
+export const setDisplayMethod = createAction<EDisplayTypes>("setDisplayMethod");
 export const toggleDisplayChange = createAction("toggleDisplayChange");
 
 export const setActiveBasemap = createAction("setActiveBasemap", (value) => ({ payload: value }));
 
 export const setLayers = createAction<ILayerConfrig[]>("setLayers");
+export const setDataLayers = createAction<IDataLayer>("setDataLayers");
 
 export const updateDefaultLayer = createAction("updateDefaultLayer", (value) => ({ payload: value }));
 export const updateSpeciesLayer = createAction<TLayerUpdatePayload>("updateSpeciesLayer");

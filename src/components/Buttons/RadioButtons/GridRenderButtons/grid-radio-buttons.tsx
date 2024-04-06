@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import cn from "classnames";
 import { useEffect } from "react";
-import { EGridsRenderMethods, getGridConfig, updateGridConfig } from "../../redux";
+import { EGridsRenderMethods, getGridConfig, updateGridConfig } from "../../../../redux";
 import { GRID_RENDER_METHODS } from "./constants";
-import styles from "./RadioButtons.module.scss";
+import styles from "./radio-buttons.module.scss";
 
-export const RadioButtons = () => {
+export const GridRadioButtons = () => {
     const { method } = useSelector(getGridConfig);
     const dispatch = useDispatch();
 

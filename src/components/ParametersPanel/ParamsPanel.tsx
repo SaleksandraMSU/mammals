@@ -26,7 +26,8 @@ export const ParametersPanel = () => {
                 className={styles.text}
                 onClick={() => setActive(!active)}
             >
-                {active ? <AiFillMinusSquare size={15} /> : <AiFillPlusSquare size={15} />}  Дополнительные параметры
+                {active ? <AiFillMinusSquare size={15} /> : <AiFillPlusSquare size={15} />}  
+                Дополнительные параметры
             </div>
             {active &&
                 <div className={styles.panel}>

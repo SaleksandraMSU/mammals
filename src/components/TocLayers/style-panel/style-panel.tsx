@@ -24,10 +24,9 @@ export const StylePanel = (
     const isDisplayChangeActive = useSelector(getIsDisplayMethodChange);
     const isGradientRender = !isDisplayChangeActive || displayMethod !== EDisplayTypes.POINTS;
 
-
-    const onChange = (v: number) => {
+    const onOpacityChange = (v: number) => {
         if (title === 'Все данные') {
-            dispatch(updateDefaultLayer({ opacity: v }));
+            dispatch(updateDefaultLayer({ 'opacity': v }));
         } else {
             dispatch(updateSpeciesLayer({ title: title, prop: 'opacity', value: v }));
         };
@@ -35,9 +34,33 @@ export const StylePanel = (
 
     const onColorChange = (color: string) => {
         if (title === 'Все данные') {
-            dispatch(updateDefaultLayer({ "color": color }));
+            dispatch(updateDefaultLayer({ 'color': color }));
         } else {
             dispatch(updateSpeciesLayer({ title: title, prop: 'color', value: color }));
+        };
+    };
+
+    const onGradientColorChange = (param: keyof IGradientConfig, color: string) => {
+        if (title === 'Все данные') {
+            dispatch(updateDefaultLayer({ 'gradient': { ...gradient, [param]: color } }));
+        } else {
+            dispatch(updateSpeciesLayer({
+                title: title,
+                prop: 'gradient',
+                value: { ...gradient, [param]: color }
+            }));
+        };
+    };
+
+    const onGradientChange = (selected: any) => {
+        if (title === 'Все данные') {
+            dispatch(updateDefaultLayer({ 'gradient': selected.value }));
+        } else {
+            dispatch(updateSpeciesLayer({
+                title: title,
+                prop: 'gradient',
+                value: selected.value
+            }));
         };
     };
 
@@ -50,10 +73,16 @@ export const StylePanel = (
                     max={1}
                     step={0.1}
                     value={opacity}
-                    onChange={onChange}
+                    onChange={onOpacityChange}
                 />
             </div>
-            {isGradientRender && <GradientPicker title={title} gradient={gradient} />}
+            {isGradientRender &&
+                <GradientPicker
+                    gradient={gradient}
+                    onGradientChange={onGradientChange}
+                    onGradientColorChange={onGradientColorChange}
+                />
+            }
             <div className={styles.panel}>
                 <label>Цвет точек</label>
                 <input

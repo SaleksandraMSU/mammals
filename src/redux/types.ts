@@ -3,7 +3,7 @@ import type {
     Polygon,
     GeoJsonProperties,
 } from "geojson";
-import { EGridTypes, EGridsRenderMethods, EBasemaps, EDisplayTypes } from "./constants"
+import { EGridTypes, EGridsRenderMethods, EBasemaps, EDisplayTypes, EData } from "./constants"
 
 export interface IFiltersState {
     species: number[],
@@ -59,12 +59,18 @@ export interface IIntersectingFeats {
     area?: number,
 };
 
+export interface IDataLayer {
+    [EData.CITIES]: boolean,
+    [EData.OOPT]: boolean,
+};
+
 export interface ILayersState {
     allowDisplayChange: boolean,
     showMethod: EDisplayTypes,
     basemap: EBasemaps,
     layers: ILayerConfrig[],
     defaultLayer: ILayerConfrig,
+    dataLayers: IDataLayer,
     zoom: IZoomConfig,
     points: IPointConfig,
     grid: IGridConfig,

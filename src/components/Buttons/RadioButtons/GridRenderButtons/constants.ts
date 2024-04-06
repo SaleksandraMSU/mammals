@@ -1,4 +1,4 @@
-import { EGridsRenderMethods } from "../../redux";
+import { EGridsRenderMethods } from "../../../../redux";
 
 export const GRID_RENDER_METHODS = [
     {

@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux"
 import React from "react";
-import { getIntersectingGridFeatsStats, getLayers } from "../../redux"
+import { getIntersectingGridFeatsStats, getLayers } from "../../../redux"
 import { StatisticsItem } from "../StatisticsItem"
-import styles from "./SpeciesComparePanel.module.scss";
+import styles from "./species-compare-panel.module.scss";
 
 const message = "Добавьте на карту минимум 2 вида для подсчета статистики";
 

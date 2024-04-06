@@ -1,9 +1,11 @@
 import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { FaCircle } from "react-icons/fa";
+import { PiRectangleDuotone } from "react-icons/pi";
+import { FaCircle, FaRegCircle } from "react-icons/fa";
 import {
     EDisplayTypes,
     IGradientConfig,
+    getDataLayers,
     getDisplayMethod,
     getIsDisplayMethodChange,
     getZoomConfig
@@ -30,6 +32,7 @@ export const LayerLegend = (
 
     const displayMethod = useSelector(getDisplayMethod);
     const isDisplayChange = useSelector(getIsDisplayMethodChange);
+    const data = useSelector(getDataLayers);
     const { map } = useMapContext();
     const [zoom, setZoom] = useState<number | undefined>(map.getView().getZoom())
     const zoomConfig = useSelector(getZoomConfig);
@@ -61,10 +64,16 @@ export const LayerLegend = (
     return (
         <>
             {isPointRender &&
-                <React.Fragment>
-                    <FaCircle fill={color} opacity={opacity} size={10} />
-                    <div>точки регистрации видов</div>
-                </React.Fragment>
+                <>
+                    <React.Fragment>
+                        <FaCircle fill={color} opacity={opacity} size={10} />
+                        точки регистрации видов
+                    </React.Fragment>
+                    <React.Fragment>
+                        <FaRegCircle fill="red" opacity={opacity} size={10} />
+                        ненадежные записи
+                    </React.Fragment>
+                </>
             }
             {
                 isGradientRender &&
@@ -100,6 +109,17 @@ export const LayerLegend = (
                             <div key={l}>{l}</div>
                         )}
                     </div>
+                </React.Fragment>
+            }
+            {
+                data.Oopt &&
+                <React.Fragment>
+                    <PiRectangleDuotone
+                        fill="rgba(102, 194, 164, 0.5)"
+                        stroke="rgba(0, 109, 44, 1)"
+                        strokeWidth={0.8}
+                        size={30} />
+                    ООПТ
                 </React.Fragment>
             }
         </>

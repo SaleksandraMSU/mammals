@@ -3,12 +3,13 @@ import cn from "classnames";
 import styles from "./IconButton.module.scss";
 
 type TIconButtonProps = {
-    value: string | number,
+    value: any,
     active: boolean,
-    onClick: (value: string | number) => void,
+    onClick: (value: any) => void,
 }
 
-export const IconButton = ({ value, onClick, children, active }: PropsWithChildren<TIconButtonProps>) => {
+export const IconButton = (
+    { value, onClick, children, active }: PropsWithChildren<TIconButtonProps>) => {
     return (
         <button
             className={cn(styles.button, {

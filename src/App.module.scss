@@ -48,7 +48,20 @@ body {
   border-right: 2px solid rgb(201, 201, 201);
   overflow-y: auto;
 }
+
 .map {
   position: relative;
   font-family: sans-serif;
 }
+
+.pageTitle {
+  font-size: 36px;
+  padding: 30px 0;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 20px 0 20px 40px;
+}
+
