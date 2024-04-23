@@ -22,9 +22,9 @@ function App() {
         <div className={styles.header}>
           <img src="./public/logo.png" alt="" height={77} />
           <span>Портал Млекопитающие России</span>
-          <div className={styles.separator}></div>
-          <div className={styles.separatorShadow}></div>
         </div>
+        <div className={styles.separator}></div>
+        <div className={styles.separatorShadow}></div>
         <div className={styles.pageTitle}>Карта млекопитающих</div>
         <div className={styles.gridContainer}>
           <div className={styles.sidebar}>

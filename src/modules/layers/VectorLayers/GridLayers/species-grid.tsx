@@ -78,37 +78,33 @@ export const SpeciesGrid = React.memo((
         const speciesBBox = turf.bbox(collection);
         const speciesBBoxPolygon = turf.bboxPolygon(speciesBBox);
         const pointFeatures: Feature<Point>[] = [];
-        const densityGrid = grid.features.map((cell) => {
-            //@ts-ignore
-            if (turf.booleanIntersects(cell, speciesBBoxPolygon)) {
-                let count = 0;
-                try {
-                    const pointsWithin = turf.pointsWithinPolygon(collection, cell).features as geoJsonPoint[]
-                    count = pointsWithin.length;
-                    // for statistics calculation
-                    if (count > 0 && (displayMethod !== EDisplayTypes.MIX || count > 1)) {
-                        cellsWithData.push({ ...cell, properties: { density: count, species: speciesVal } });
-                    }
-                    // for mix display
-                    if (count === 1) {
-                        const features = pointsWithin.map((f) => new Feature({
-                            geometry: new Point(f.geometry.coordinates).transform("EPSG:4326", projection),
-                            ...f.properties
-                        }))
-                        pointFeatures.push(...features);
-                    }
+        //@ts-ignore
+        const clippedGrid = grid.features.filter((cell) => turf.booleanIntersects(cell, speciesBBoxPolygon));
+        const densityGrid = clippedGrid.map((cell) => {
+            let count = 0;
+            try {
+                const pointsWithin = turf.pointsWithinPolygon(collection, cell).features as geoJsonPoint[]
+                count = pointsWithin.length;
+                // for statistics calculation
+                if (count > 0 && (displayMethod !== EDisplayTypes.MIX || count > 1)) {
+                    cellsWithData.push({ ...cell, properties: { density: count, species: speciesVal } });
                 }
-                catch (e) {
-                    console.log(e);
+                // for mix display
+                if (count === 1) {
+                    const features = pointsWithin.map((f) => new Feature({
+                        geometry: new Point(f.geometry.coordinates).transform("EPSG:4326", projection),
+                        ...f.properties
+                    }))
+                    pointFeatures.push(...features);
                 }
-                return { ...cell, properties: { density: count } };
-            } else {
-                return null;
             }
+            catch (e) {
+                console.log(e);
+            }
+            return { ...cell, properties: { density: count } };
         });
 
         const gridFeatures = densityGrid
-            .filter((el) => el)
             .map((cell) => {
                 return new Feature({
                     geometry:
@@ -151,7 +147,10 @@ export const SpeciesGrid = React.memo((
             15, getInterimColor(colors[1], colors[2], opacity),
             20, colors[2],
         ] : createColorArray(color, opacity),
-        filter: displayMethod === EDisplayTypes.MIX ? [">", ['get', 'Count', 'number'], 1] : [">", ['get', 'Count', 'number'], 0],
+        filter: displayMethod === EDisplayTypes.MIX ?
+            [">", ['get', 'Count', 'number'], 1]
+            :
+            [">", ['get', 'Count', 'number'], 0],
     };
 
     class WebGLLayer extends Layer {
@@ -168,7 +167,7 @@ export const SpeciesGrid = React.memo((
 
     useEffect(() => {
         if (overlapFeatures.length) {
-            const featsToRemove = gridFeats.filter((cell) => {
+            const featsToAdd = gridFeats.filter((cell) => {
                 const geometry = cell.getGeometry();
                 if (!geometry) return false;
                 const reprojectedCell = geometry.clone().transform(projection, "EPSG:4326");
@@ -176,9 +175,10 @@ export const SpeciesGrid = React.memo((
                 const isIntersects = overlapFeatures.some((feat) =>
                     turf.booleanContains(geoJsonCell, feat)
                 );
-                return isIntersects;
+                return !isIntersects;
             });
-            source.removeFeatures(featsToRemove);
+            source.clear();
+            source.addFeatures(featsToAdd);
         }
     }, [overlapFeatures, projection]);
 
