@@ -7,6 +7,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import VectorSource from 'ol/source/Vector.js';
 import WebGLVectorLayerRenderer from 'ol/renderer/webgl/VectorLayer.js';
 import { transform } from 'ol/proj';
+import VectorLayer from "ol/layer/Vector";
 import * as turf from '@turf/turf';
 import {
     EDisplayTypes,
@@ -31,7 +32,6 @@ import type {
 import { VectorLayerMix } from "../vector-layer-mix";
 import { useGridContext } from "./grid-context";
 
-
 type TSpeciesGridProps = {
     speciesVal?: number;
     title?: string;
@@ -39,7 +39,7 @@ type TSpeciesGridProps = {
     opacity: number;
     gradient: IGradientConfig;
     color: string;
-}
+};
 
 export const SpeciesGrid = React.memo((
     { speciesVal, title, opacity, gradient, color, grid }: TSpeciesGridProps) => {
@@ -68,8 +68,11 @@ export const SpeciesGrid = React.memo((
             const coords = feat.getGeometry()?.getCoordinates()
             const transformedCoords = transform(coords!, projection, "EPSG:4326");
             const transformedGeometry = new Point(transformedCoords);
+            const props = feat.getProperties();
+            delete props["geometry"];
             const transformedFeature = new Feature({
                 geometry: transformedGeometry,
+                ...props
             });
             return transformedFeature;
         })
@@ -101,10 +104,12 @@ export const SpeciesGrid = React.memo((
             catch (e) {
                 console.log(e);
             }
-            return { ...cell, properties: { density: count } };
+            const calculated = count > 0 ? { ...cell, properties: { density: count } } : null;
+            return calculated;
         });
 
         const gridFeatures = densityGrid
+            .filter(el => el)
             .map((cell) => {
                 return new Feature({
                     geometry:
@@ -128,6 +133,7 @@ export const SpeciesGrid = React.memo((
         features,
         grid,
         projection,
+        isDisplayChangeActive,
     ]);
 
     const colors = Object.values(gradient).map((hex) => {
@@ -135,18 +141,20 @@ export const SpeciesGrid = React.memo((
     });
 
     const style = {
-        'stroke-color': ['color', 0, 0, 0, opacity],
-        'stroke-width': 0.5,
-        'fill-color': isQuantities ? [
-            'interpolate',
-            ['linear'],
-            ['get', 'Count', 'number'],
-            1, colors[0],
-            5, getInterimColor(colors[0], colors[1], opacity),
-            10, colors[1],
-            15, getInterimColor(colors[1], colors[2], opacity),
-            20, colors[2],
-        ] : createColorArray(color, opacity),
+        style: {
+            'stroke-color': [0, 0, 0, opacity],
+            'stroke-width': 0.5,
+            'fill-color': isQuantities ? [
+                'interpolate',
+                ['linear'],
+                ['get', 'Count', 'number'],
+                1, colors[0],
+                5, getInterimColor(colors[0], colors[1], opacity),
+                10, colors[1],
+                15, getInterimColor(colors[1], colors[2], opacity),
+                20, colors[2],
+            ] : createColorArray(color, opacity),
+        },
         filter: displayMethod === EDisplayTypes.MIX ?
             [">", ['get', 'Count', 'number'], 1]
             :
@@ -183,14 +191,15 @@ export const SpeciesGrid = React.memo((
     }, [overlapFeatures, projection]);
 
     const layer = useMemo(() => (
-        new WebGLLayer({
+        new VectorLayer({
+            style: [style],
             source: source,
             zIndex: 2,
             visible: isDisplayChangeActive ?
                 (displayMethod === EDisplayTypes.GRID || displayMethod === EDisplayTypes.MIX)
                 : true,
         })
-    ), [style, source, config]);
+    ), [style, source]);
 
 
     useEffect(() => {

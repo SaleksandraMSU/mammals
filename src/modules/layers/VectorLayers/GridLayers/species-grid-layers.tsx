@@ -27,7 +27,7 @@ export const GridLayers = React.memo(() => {
         const combinedFeatures = [...gridBefore180.features, ...gridAfter180.features];
         const featureCollection = turf.featureCollection(combinedFeatures);
         return featureCollection
-    }, [config]);
+    }, [config.type, config.cellSize]);
 
     const [grid, setGrid] = useState<polygonFeatureCollection>(generateGrid);
 

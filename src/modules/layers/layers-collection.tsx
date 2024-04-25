@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { Feature } from "ol";
@@ -23,7 +23,7 @@ import { OoptLayer } from './VectorLayers/oopt-vector-layer';
 export const LayersCollection = React.memo(() => {
     const [features, setFeatures] = useState<Feature<Point>[]>([]);
     const [data, setData] = useState<Feature<Point>[]>([]);
-    const dataLayers = useSelector(getDataLayers);
+    const { Cities, Oopt } = useSelector(getDataLayers);
     const isDisplayChange = useSelector(getIsDisplayMethodChange);
     const displayMethod = useSelector(getDisplayMethod);
     const {
@@ -36,8 +36,10 @@ export const LayersCollection = React.memo(() => {
     const projection = useSelector(getMapProjection);
     const ref = useRef<string>(projection);
 
-    const isCustomGridsNotRender = isDisplayChange &&
-        NON_GRID_DISPLAY_TYPES.includes(displayMethod);
+    const isCustomGridsNotRender = useMemo(() =>
+        isDisplayChange && NON_GRID_DISPLAY_TYPES.includes(displayMethod),
+        [isDisplayChange, displayMethod]
+    );
 
     useEffect(() => {
         ref.current = projection;
@@ -88,8 +90,8 @@ export const LayersCollection = React.memo(() => {
             <VectorLayer features={data} />
             {!isCustomGridsNotRender && <GridLayers />}
             <HeatmapLayers />
-            {dataLayers.Cities && <CitiesHeatmap />}
-            {dataLayers.Oopt && <OoptLayer />}
+            {Cities && <CitiesHeatmap />}
+            {Oopt && <OoptLayer />}
             <ZoomToLayer />
         </FeaturesContext.Provider>
     );

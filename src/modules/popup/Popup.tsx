@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useMapContext } from '../map';
 import './popup-style.scss';
+import { species } from '../../components/Select/data';
 
 export const PopupControl = () => {
   const { map } = useMapContext();
@@ -11,33 +12,38 @@ export const PopupControl = () => {
   useEffect(() => {
     const overlay = new Overlay({
       element: popupRef.current!,
-      autoPan: true,
+      autoPan: false,
     });
     map.addOverlay(overlay);
 
     map.on('singleclick', (event) => {
       const coordinate = event.coordinate;
-      map.forEachFeatureAtPixel(event.pixel, (feature) => {
-        const attributes = feature.getProperties();
-        const popupContent = (
-          <div>
-            <button
-              className="popup-closer"
-              onClick={() => overlay.setPosition(undefined)}
-            />
-            {Object.keys(attributes)
-              .filter((key) => key !== "geometry")
-              .map((key) => (
+      const feats = map.getFeaturesAtPixel(event.pixel);
+      const attributes = feats[0].getProperties();
+      const popupContent = (
+        <div>
+          <button
+            className="popup-closer"
+            onClick={() => overlay.setPosition(undefined)}
+          />
+          {Object.entries(attributes)
+            .filter(([k, _]) => k !== "geometry")
+            .map(([key, value]) => (
+              ["species", "Species"].includes(key) ?
                 <p key={key}>
                   <strong>{key}: </strong>
-                  {JSON.stringify(attributes[key])}
+                  {species.find((sp) => +sp.value === value)?.label}
                 </p>
-              ))}
-          </div>
-        );
-        createRoot(popupRef.current!).render(popupContent);
-        overlay.setPosition(coordinate);
-      });
+                :
+                <p key={key}>
+                  <strong>{key}: </strong>
+                  {value}
+                </p>
+            ))}
+        </div>
+      );
+      createRoot(popupRef.current!).render(popupContent);
+      overlay.setPosition(coordinate);
     });
   }, [map]);
 

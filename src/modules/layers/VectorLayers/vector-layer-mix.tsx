@@ -4,12 +4,12 @@ import { Feature } from 'ol';
 import VectorSource from 'ol/source/Vector.js'
 import WebGLPointsLayer from 'ol/layer/WebGLPoints';
 import { Point } from 'ol/geom';
-import { useMapContext } from "../../map"
 import {
     EDisplayTypes,
     getDisplayMethod,
     getPointsConfig,
 } from '../../../redux';
+import { useMapContext } from "../../map"
 
 type TVectorLayerMixProps = {
     features: Feature<Point>[];
@@ -50,7 +50,7 @@ export const VectorLayerMix = React.memo((
         new WebGLPointsLayer({
             source: source,
             style: style,
-            zIndex: 50,
+            zIndex: 100,
             visible: displayMethod === EDisplayTypes.MIX,
         }
         ), [source, style, displayMethod]);
