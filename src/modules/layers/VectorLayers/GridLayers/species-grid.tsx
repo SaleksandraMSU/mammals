@@ -12,8 +12,10 @@ import * as turf from '@turf/turf';
 import {
     EDisplayTypes,
     EGridsRenderMethods,
+    IFiltersState,
     IGradientConfig,
     getDisplayMethod,
+    getFiltersState,
     getGridConfig,
     getIsDisplayMethodChange,
     getZoomConfig,
@@ -39,10 +41,11 @@ type TSpeciesGridProps = {
     opacity: number;
     gradient: IGradientConfig;
     color: string;
+    filters?: IFiltersState | undefined;
 };
 
 export const SpeciesGrid = React.memo((
-    { speciesVal, title, opacity, gradient, color, grid }: TSpeciesGridProps) => {
+    { speciesVal, title, opacity, gradient, color, grid, filters }: TSpeciesGridProps) => {
     const { map } = useMapContext();
     const { features } = useFeaturesContext();
     const { overlapFeatures } = useGridContext();
@@ -55,12 +58,33 @@ export const SpeciesGrid = React.memo((
     const [featuresOutOfCells, setFeaturesOutOfCells] = useState<Feature<Point>[]>([]);
     const projection = map.getView().getProjection().getCode();
     const isQuantities = config.method === EGridsRenderMethods.QUANTITY;
+    let {
+        museum,
+        months,
+        dateRange,
+        determinationMethod,
+        isReliable
+    } = useSelector(getFiltersState);
+
+
+    museum = filters ? filters.museum : museum;
+    months = filters ? filters.months : months;
+    dateRange = filters ? filters.dateRange : dateRange;
+    determinationMethod = filters ? filters.determinationMethod : determinationMethod;
+    isReliable = filters ? filters.isReliable : isReliable;
+    const species = filters ? filters.species[0] : speciesVal;
+
 
     useEffect(() => {
         const cellsWithData: geoJsonPolygon[] = [];
         const filtered = features.filter((f) => {
             return (
-                speciesVal ? f.get('species') === speciesVal : true
+                (species ? f.get('species') === species : true) &&
+                (museum.length > 0 ? museum.includes(f.get('genesis_da')) : true) &&
+                f.get('year') >= dateRange[0] && f.get('year') <= dateRange[1] &&
+                (months.length > 0 ? months.includes(f.get('month')) : true) &&
+                (determinationMethod.length > 0 ? determinationMethod.includes(f.get('determ')) : true) &&
+                (isReliable ? f.get('quality') === 3 : true)
             )
         });
 
@@ -114,7 +138,8 @@ export const SpeciesGrid = React.memo((
                 return new Feature({
                     geometry:
                         new Polygon(cell!.geometry.coordinates)
-                            .transform("EPSG:4326", projection),
+                            .transform("EPSG:4326", projection)
+                            ,
                     Count: cell!.properties.density
                 });
             });
@@ -134,6 +159,11 @@ export const SpeciesGrid = React.memo((
         grid,
         projection,
         isDisplayChangeActive,
+        museum,
+        months,
+        dateRange,
+        determinationMethod,
+        isReliable,
     ]);
 
     const colors = Object.values(gradient).map((hex) => {

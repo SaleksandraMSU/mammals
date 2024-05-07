@@ -10,7 +10,12 @@ export const StatisticsItem = ({ title, children }: PropsWithChildren<TStaticsIt
 
     return (
         <div className={styles.background}>
-            <div className={styles.block} onClick={() => setActive(!active)}>{title}</div>
+            <div
+                className={styles.block}
+                onClick={() => setActive(!active)}
+            >
+                {title}
+            </div>
             {active &&
                 children}
         </div>

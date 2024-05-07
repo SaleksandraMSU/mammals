@@ -1,5 +1,6 @@
 export * from "./Checkbox";
 export * from "./Collapsible";
+export * from "./DataSelector";
 export * from "./GradientPicker";
 export * from "./Buttons";
 export * from "./Icons";

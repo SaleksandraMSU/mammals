@@ -22,6 +22,9 @@ import {
     setZoomParams,
     setIntersectingGridFeatures,
     setDataLayers,
+    toggleSampleMode,
+    addLayer,
+    deleteLayer,
 } from "../actions";
 
 const initialState: ILayersState = {
@@ -35,6 +38,7 @@ const initialState: ILayersState = {
     grid: DEFAULT_GRID,
     heatmap: DEFAULT_HEATMAP,
     points: DEFAULT_POINTS,
+    sampleMode: false,
 }
 
 export const LayersReducer = createReducer(initialState, (builder) => {
@@ -42,12 +46,22 @@ export const LayersReducer = createReducer(initialState, (builder) => {
         .addCase(setDisplayMethod, (state, action) => {
             state.showMethod = action.payload;
         })
+        .addCase(toggleSampleMode, (state) => {
+            state.sampleMode = !state.sampleMode;
+        })
         .addCase(toggleDisplayChange, (state) => {
             state.allowDisplayChange = !state.allowDisplayChange;
             state.showMethod = initialState.showMethod;
         })
         .addCase(setActiveBasemap, (state, action) => {
             state.basemap = action.payload;
+        })
+        .addCase(addLayer, (state, action) => {
+            state.layers.push(action.payload);
+        })
+        .addCase(deleteLayer, (state, action) => {
+            const idx = action.payload;
+            state.layers.splice(idx, 1)
         })
         .addCase(setLayers, (state, action) => {
             const newLayers = action.payload;

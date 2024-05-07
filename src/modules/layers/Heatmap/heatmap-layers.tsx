@@ -25,6 +25,7 @@ export const HeatmapLayers = () => {
                         speciesVal={l.value}
                         opacity={l.opacity}
                         gradient={l.gradient}
+                        filters={l.filters}
                     />
                 )
                 ) :

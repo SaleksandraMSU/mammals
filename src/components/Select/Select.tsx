@@ -11,11 +11,13 @@ type TSelectProps = {
     value: TFilter,
     onSelect: (param: TFilter, value: boolean | number[]) => void,
     addLayers?: (options: MultiValue<any>) => void,
+    filters?: IFiltersState,
 };
 
-export const FilterSelect = ({ options, title, value, onSelect, addLayers }: TSelectProps) => {
-    const filters = useSelector(getFiltersState);
+export const FilterSelect = ({ options, title, value, onSelect, addLayers, filters }: TSelectProps) => {
+    const filtersState = useSelector(getFiltersState);
     const [disabled, setDisabled] = useState(false);
+    const filtersList = filters ?? filtersState;
 
     const onChange = (selected: MultiValue<any>) => {
         if (selected.length === 4) {
@@ -32,7 +34,7 @@ export const FilterSelect = ({ options, title, value, onSelect, addLayers }: TSe
             options={options}
             placeholder={title}
             value={options.filter(option =>
-                (filters[value] as number[]).includes(Number(option.value))
+                (filtersList[value] as number[]).includes(Number(option.value))
             )}
             onChange={(selected) => onChange(selected)}
             isOptionDisabled={() => disabled}

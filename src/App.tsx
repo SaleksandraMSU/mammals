@@ -6,7 +6,8 @@ import {
   StatisticsPanel,
   SpeciesComparePanel,
   ZoomChange,
-  DisplayRadioButtons
+  DisplayRadioButtons,
+  DataSelector
 } from './components';
 import { MapComponent, ProjectionSelect } from './modules/map';
 import { BasemapsSelect, LayersCollection } from './modules/layers';
@@ -37,8 +38,8 @@ function App() {
               <BasemapsSelect />
               <ProjectionSelect />
             </Collapsible>
-            <Collapsible label='Фильтрация'>
-              <Filters />
+            <Collapsible label='Данные'>
+              <DataSelector />
             </Collapsible>
             <Collapsible label='Статистика'>
               <StatisticsPanel />

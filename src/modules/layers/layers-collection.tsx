@@ -9,7 +9,10 @@ import {
     getIsDisplayMethodChange,
     getDisplayMethod,
     getMapProjection,
-    getDataLayers
+    getDataLayers,
+    getIsNoShowLayers,
+    getIsSampleMode,
+    getLayers
 } from "../../redux";
 import { NON_GRID_DISPLAY_TYPES } from "../constants";
 import { ZoomToLayer } from "./ZoomToLayer";
@@ -19,22 +22,18 @@ import { FeaturesContext } from "./features-context";
 import { CitiesHeatmap, HeatmapLayers } from "./Heatmap/";
 import { reprojectPoint } from "./layers-utils";
 import { OoptLayer } from './VectorLayers/oopt-vector-layer';
+import { SampleVectorLayer } from './VectorLayers/sample-vector-layer';
 
 export const LayersCollection = React.memo(() => {
     const [features, setFeatures] = useState<Feature<Point>[]>([]);
-    const [data, setData] = useState<Feature<Point>[]>([]);
     const { Cities, Oopt } = useSelector(getDataLayers);
+    const layers = useSelector(getLayers);
     const isDisplayChange = useSelector(getIsDisplayMethodChange);
     const displayMethod = useSelector(getDisplayMethod);
-    const {
-        museum,
-        months,
-        dateRange,
-        determinationMethod,
-        isReliable
-    } = useSelector(getFiltersState);
     const projection = useSelector(getMapProjection);
     const ref = useRef<string>(projection);
+    const isNoShowLayers = useSelector(getIsNoShowLayers);
+    const isSampleMode = useSelector(getIsSampleMode);
 
     const isCustomGridsNotRender = useMemo(() =>
         isDisplayChange && NON_GRID_DISPLAY_TYPES.includes(displayMethod),
@@ -45,35 +44,20 @@ export const LayersCollection = React.memo(() => {
         ref.current = projection;
         getGeoserverFeatures("rmm", projection)
             .then((feats) =>
-                setData(feats as Feature<Point>[]));
+                setFeatures(feats as Feature<Point>[]));
     }, []);
 
 
     useEffect(() => {
-        if (data.length && ref.current !== projection) {
-            const dataProjected = data.map((point) => {
+        if (features.length && ref.current !== projection) {
+            const dataProjected = features.map((point) => {
                 const reprojected = reprojectPoint(point, ref.current, projection);
                 return reprojected;
             });
-            setData(dataProjected);
+            setFeatures(dataProjected);
             ref.current = projection;
         }
-    }, [projection, data.length]);
-
-    useEffect(() => {
-        if (data.length) {
-            const filtered = data.filter((f) => {
-                return (
-                    (museum.length > 0 ? museum.includes(f.get('genesis_da')) : true) &&
-                    f.get('year') >= dateRange[0] && f.get('year') <= dateRange[1] &&
-                    (months.length > 0 ? months.includes(f.get('month')) : true) &&
-                    (determinationMethod.length > 0 ? determinationMethod.includes(f.get('determ')) : true) &&
-                    (isReliable ? f.get('quality') === 3 : true)
-                )
-            });
-            setFeatures(filtered);
-        }
-    }, [data, museum, dateRange, months, determinationMethod, isReliable]);
+    }, [projection, features.length]);
 
 
     return (
@@ -87,9 +71,23 @@ export const LayersCollection = React.memo(() => {
                     proj={basemap.proj}
                 />
             ))}
-            <VectorLayer features={data} />
-            {!isCustomGridsNotRender && <GridLayers />}
-            <HeatmapLayers />
+            {!isSampleMode ?
+                <VectorLayer features={features} />
+                :
+                layers.length ?
+                    layers.map((l) => (
+                        <SampleVectorLayer
+                            key={l.value}
+                            opacity={l.opacity}
+                            color={l.color}
+                            filters={l.filters!}
+                        />
+                    ))
+                    :
+                    null
+            }
+            {!isCustomGridsNotRender && !isNoShowLayers && <GridLayers />}
+            {!isNoShowLayers && <HeatmapLayers />}
             {Cities && <CitiesHeatmap />}
             {Oopt && <OoptLayer />}
             <ZoomToLayer />

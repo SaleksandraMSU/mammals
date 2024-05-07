@@ -6,7 +6,7 @@ export const GRID_RENDER_METHODS = [
         value: EGridsRenderMethods.QUANTITY,
     },
     {
-        label: "Только виды",
+        label: "Только разные слои",
         value: EGridsRenderMethods.QUALITY,
     },
 ];

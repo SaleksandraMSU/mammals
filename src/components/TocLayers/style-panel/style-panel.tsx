@@ -9,13 +9,14 @@ import {
 import { SingleSlider } from "../../Slider";
 import { GradientPicker } from "../../GradientPicker";
 import styles from "./style-panel.module.scss";
+import { POINT_DISPLAY_TYPES } from "../../../modules/constants";
 
 type TStylePanelProps = {
     title: string,
     opacity: number,
     color?: string,
     gradient: IGradientConfig,
-    displayMethod: string,
+    displayMethod: EDisplayTypes,
 }
 
 export const StylePanel = (
@@ -23,6 +24,7 @@ export const StylePanel = (
     const dispatch = useDispatch();
     const isDisplayChangeActive = useSelector(getIsDisplayMethodChange);
     const isGradientRender = !isDisplayChangeActive || displayMethod !== EDisplayTypes.POINTS;
+    const isPointRender = POINT_DISPLAY_TYPES.includes(displayMethod);
 
     const onOpacityChange = (v: number) => {
         if (title === 'Все данные') {
@@ -83,14 +85,16 @@ export const StylePanel = (
                     onGradientColorChange={onGradientColorChange}
                 />
             }
-            <div className={styles.panel}>
-                <label>Цвет точек</label>
-                <input
-                    type="color"
-                    value={color}
-                    onChange={(e) => onColorChange(e.target.value)}
-                />
-            </div>
+            {isPointRender &&
+                <div className={styles.panel}>
+                    <label>Цвет точек</label>
+                    <input
+                        type="color"
+                        value={color}
+                        onChange={(e) => onColorChange(e.target.value)}
+                    />
+                </div>
+            }
         </div>
     )
 }

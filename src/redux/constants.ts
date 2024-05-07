@@ -22,6 +22,7 @@ export enum EMapProjections {
     EPSG_3857 = "EPSG:3857",
     EPSG_3576 = "EPSG:3576",
     EPSG_102025 = "EPSG:102025",
+    EPSG_4326 = "EPSG:4326",
 };
 
 export enum EBasemaps {
@@ -42,7 +43,7 @@ export const DEFAULT_GRADIENT = { color1: "#f5f500", color2: "#f57a00", color3: 
 
 export const DEFAULT_LAYER: ILayerConfrig = {
     title: "Все данные",
-    opacity: 1,
+    opacity: 0.6,
     color: "#FF8000",
     gradient: DEFAULT_GRADIENT,
     gridCells: [],

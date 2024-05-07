@@ -13,6 +13,7 @@ import { EDisplayTypes, EMapProjections } from "./constants";
 
 export const setFilters = createAction("setFilters", (value) => ({ payload: value }));
 export const resetFilters = createAction("resetFilters");
+export const toggleSampleMode = createAction("toggleSampleMode");
 
 export const setDisplayMethod = createAction<EDisplayTypes>("setDisplayMethod");
 export const toggleDisplayChange = createAction("toggleDisplayChange");
@@ -20,6 +21,8 @@ export const toggleDisplayChange = createAction("toggleDisplayChange");
 export const setActiveBasemap = createAction("setActiveBasemap", (value) => ({ payload: value }));
 
 export const setLayers = createAction<ILayerConfrig[]>("setLayers");
+export const addLayer = createAction<ILayerConfrig>("addLayer");
+export const deleteLayer = createAction<number>("deleteLayer");
 export const setDataLayers = createAction<IDataLayer>("setDataLayers");
 
 export const updateDefaultLayer = createAction("updateDefaultLayer", (value) => ({ payload: value }));

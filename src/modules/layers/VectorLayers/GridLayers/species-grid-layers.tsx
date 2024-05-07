@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import React, { useCallback, useEffect, useState } from "react";
 import * as turf from '@turf/turf';
 import {
+    EGridTypes,
     getDefaultLayer,
     getGridConfig,
     getIsZeroFilters,
@@ -19,11 +20,14 @@ export const GridLayers = React.memo(() => {
     const speciesLayers = useSelector(getLayers);
     const isNoFilters = useSelector(getIsZeroFilters);
     const config = useSelector(getGridConfig);
+    const isHex = config.type === EGridTypes.HEX;
     const { opacity, gradient, color } = useSelector(getDefaultLayer);
 
     const generateGrid = useCallback(() => {
-        const gridBefore180 = createGrid(config.type, [0, 41, 180, 85], config.cellSize);
-        const gridAfter180 = createGrid(config.type, [-180, 41, -168, 85], config.cellSize);
+        const bbox1: turf.BBox = isHex ? [15, 0, 180, 90] : [0, 41, 180, 85];
+        const bbox2: turf.BBox = isHex ? [-180, 0, -168, 90] : [-180, 41, -168, 85];
+        const gridBefore180 = createGrid(config.type, bbox1, config.cellSize);
+        const gridAfter180 = createGrid(config.type, bbox2, config.cellSize);
         const combinedFeatures = [...gridBefore180.features, ...gridAfter180.features];
         const featureCollection = turf.featureCollection(combinedFeatures);
         return featureCollection
@@ -49,6 +53,7 @@ export const GridLayers = React.memo(() => {
                             opacity={l.opacity}
                             gradient={l.gradient}
                             color={l.color}
+                            filters={l.filters}
                         />
                     )}
                     {speciesLayers.length > 1 && <SpeciesGridsOverlapLayer />}

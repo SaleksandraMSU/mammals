@@ -9,12 +9,9 @@ export interface IFiltersState {
     species: number[],
     dateRange: number[],
     months: number[],
-    author: number[],
     museum: number[],
-    status: number[],
     determinationMethod: number[],
     isReliable: boolean,
-    isPhoto: boolean,
 };
 
 export interface IGradientConfig {
@@ -30,6 +27,7 @@ export interface ILayerConfrig {
     color: string,
     gradient: IGradientConfig,
     gridCells: Feature<Polygon, GeoJsonProperties>[],
+    filters?: IFiltersState,
 };
 
 export interface IGridConfig {
@@ -75,6 +73,7 @@ export interface ILayersState {
     points: IPointConfig,
     grid: IGridConfig,
     heatmap: IHeatmapConfig,
+    sampleMode: boolean,
     intersectingFeats?: IIntersectingFeats,
 };
 

@@ -62,4 +62,15 @@ export const getIntersectingGridFeatsStats = createSelector(
 export const getDataLayers = createSelector(
     getLayersState,
     (state) => state.dataLayers ?? {}
-)
+);
+
+export const getIsSampleMode = createSelector(
+    getLayersState,
+    (state) => state.sampleMode
+);
+
+export const getIsNoShowLayers = createSelector(
+    getLayers,
+    getIsSampleMode,
+    (layers, mode) => layers.length === 0 && mode === true
+);

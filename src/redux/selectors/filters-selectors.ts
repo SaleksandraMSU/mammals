@@ -19,10 +19,6 @@ export const getDates = createSelector(
     (state) => state.dateRange
 );
 
-export const getIsPhoto = createSelector(
-    getFiltersState,
-    (state) => state.isPhoto
-);
 
 export const getIsReliable = createSelector(
     getFiltersState,

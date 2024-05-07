@@ -6,12 +6,9 @@ export const initialState: IFiltersState = {
     species: [],
     dateRange: [1697, 2024],
     months: [],
-    author: [],
     museum: [],
-    status: [],
     determinationMethod: [],
     isReliable: false,
-    isPhoto: false,
 }
 
 export const FiltersReducer = createReducer(initialState, (builder) => {

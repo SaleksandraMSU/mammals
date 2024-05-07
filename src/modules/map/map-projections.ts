@@ -30,4 +30,9 @@ export const PROJECTIONS: TProjectionItem[] = [
         label: "Asia North Albers (ESRI:102025)",
         gridset: "102025",
     },
+    {
+        value: EMapProjections.EPSG_4326,
+        label: "WGS-84 (EPSG:4326)",
+        gridset: "4326",
+    },
 ];
